@@ -1,0 +1,3 @@
+Eel==1.0.0a1
+PyAutoGUI~=0.9.54
+psutil~=6.0.0

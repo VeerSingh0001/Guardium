@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="/eel.js"></script>
+  <title>Guardium</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="logo"><img src="./images/antivirus.png" alt=""></div>
+      <div class="system-status">
+        <span class="secure"><h1>Guardium</h1></span>
+      </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content">
+      <!-- Left Sidebar -->
+      <aside class="sidebar">
+        <ul>
+          <li>Quick Scan</li>
+          <li>Full Scan</li>
+          <li>Custom Scan</li>
+          <li>Quarantine</li>
+          <li>Settings</li>
+        </ul>
+      </aside>
+
+      <!-- Main Dashboard Area -->
+      <section class="dashboard">
+        <!-- System Status -->
+        <div class="status-card">
+          <!-- <h2>System Status: <span class="secure-status">Secure</span></h2>
+          <button id="scan-btn">Quick Scan</button> -->
+
+          <!--Progress bar-->
+          <div class="progress-container">
+            <div class="progress-circle">
+              <!-- <div class="progress-value" id="progressValue"> -->
+                <button id="scanButton" class="scan-btn"><div class="progress-value" id="progressValue">SCAN</div></button>
+              <!-- </div> -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Threats List -->
+        <div class="threats-list">
+          <h3>Detected Threats</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Threat Name</th>
+                <th>Risk Level</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Trojan.Win32</td>
+                <td class="high-risk">High</td>
+                <td>
+                  <button>Remove</button>
+                  <button>Quarantine</button>
+                  <button>Allow</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Adware.Agent</td>
+                <td class="medium-risk">Medium</td>
+                <td>
+                  <button>Remove</button>
+                  <button>Quarantine</button>
+                  <button>Allow</button>
+                </td>
+              </tr>
+              <!-- Add more threats here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
