@@ -1,6 +1,6 @@
 import ctypes
 
-from elevate import elevate
+# from elevate import elevate
 import os
 import pyclamd
 import eel
@@ -9,7 +9,7 @@ import psutil
 import pyautogui
 import sys, subprocess
 
-elevate()
+# elevate()
 
 eel.init("web")
 
@@ -19,13 +19,13 @@ def connect_to_clamd():
     try:
         cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
         if cd.ping():
-            print("Connected to ClamAV daemon")
+            print("Connected to Guardium daemon")
             return cd
         else:
-            print("Failed to connect to ClamAV daemon")
+            print("Failed to connect to Guardium daemon")
             return None
     except pyclamd.ConnectionError:
-        print("Could not connect to ClamAV daemon.")
+        print("Could not connect to Guardium daemon.")
         return None
 
 
@@ -44,9 +44,12 @@ def count_files_os_walk(typ):
     elif typ == "full":
         all_partitions = psutil.disk_partitions()
         for part in all_partitions:
-            partitions.append(part.device)
+            print(part.device)
+            if all_partitions.index(part) == 2:
+                partitions.append(part.device)
+                print(partitions)
     else:
-        pass  # Custom scan files list
+        pass
 
     for partition in partitions:
         directory = partition.replace("\\", "/")
@@ -84,15 +87,18 @@ def is_admin():
         return False
 
 
+if not is_admin():
+    ctypes.windll.shell32.ShellExecuteW(
+        None, "runas", sys.executable, ' '.join(sys.argv), None, 1
+    )
+    sys.exit()
+
+
 @eel.expose
 def scan_files():
     print("Starting Service.....")
-    command = "net start clamd"
-    if is_admin():
-        result = (subprocess.run(command, capture_output=True, text=True))
-        print(result)
-    else:
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
+    command = f'runas /user:Administrator "net start clamd"'
+    subprocess.run(command, shell=True)
     clamd_instance = connect_to_clamd()
     count_files_os_walk("full")
     if clamd_instance:
