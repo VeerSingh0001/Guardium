@@ -1,3 +1,4 @@
-copy clamav-1.4.1.win.x64 "C:\Program Files\ClamAV"
-cd "C:\Program Files\ClamAV"
+copy Guardium "C:\Program Files\Guardium"
+cd "C:\Program Files\Guardium"
 freshclam
+net start clamd

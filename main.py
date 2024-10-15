@@ -1,122 +1,100 @@
-import ctypes
-
-# from elevate import elevate
 import os
 import pyclamd
 import eel
 import platform
 import psutil
 import pyautogui
-import sys, subprocess
-
-# elevate()
+import sys
 
 eel.init("web")
 
 
-# Connect to the ClamAV daemon
-def connect_to_clamd():
-    try:
-        cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
-        if cd.ping():
-            print("Connected to Guardium daemon")
-            return cd
-        else:
-            print("Failed to connect to Guardium daemon")
+class Anti:
+    def __init__(self):
+        self.partitions = []
+
+    # Connect to the ClamAV daemon
+    def connect_to_guardium(self):
+        try:
+            cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
+            if cd.ping():
+                print("Connected to Guardium daemon")
+                return cd
+            else:
+                print("Failed to connect to Guardium daemon")
+                return None
+        except pyclamd.ConnectionError:
+            print("Could not connect to Guardium daemon.")
             return None
-    except pyclamd.ConnectionError:
-        print("Could not connect to Guardium daemon.")
-        return None
 
-
-#  Count the total number of files to be scanned
-def count_files_os_walk(typ):
-    file_count = 0
-    global partitions
-    if typ == "quick":
-        partitions = [
-            "C:\\Windows\\System32",
-            "C:\\Program Files",
-            "C:\\Program Files (x86)",
-            os.path.expandvars("%USERPROFILE%\\AppData\\Local\\Temp"),
-            os.path.expandvars("%USERPROFILE%\\AppData\\Roaming"),
-        ]
-    elif typ == "full":
-        all_partitions = psutil.disk_partitions()
-        for part in all_partitions:
-            print(part.device)
-            if all_partitions.index(part) == 2:
-                partitions.append(part.device)
-                print(partitions)
-    else:
-        pass
-
-    for partition in partitions:
-        directory = partition.replace("\\", "/")
-
-        for root, dirs, files in os.walk(directory):
-            file_count += len(files)
-    print(f"Total number of files: {file_count}")
-    return file_count
-
-
-# Scan a directory
-def scan_directory(cd, directory_path):
-    for root, dirs, files in os.walk(directory_path):
-        for file in files:
-            file_path = fr"{os.path.join(root, file)}"
-            scan_file(cd, file_path)
-
-
-# Scan a single file
-def scan_file(cd, file_path):
-    try:
-        result = cd.scan_file(file_path)
-        if result is None:
-            print(f"{file_path} is clean")
+    #  Count the total number of files to be scanned
+    def count_files(self, typ):
+        file_count = 0
+        if typ == "quick":
+            self.partitions = [
+                "C:\\Windows\\System32",
+                "C:\\Program Files",
+                "C:\\Program Files (x86)",
+                os.path.expandvars("%USERPROFILE%\\AppData\\Local\\Temp"),
+                os.path.expandvars("%USERPROFILE%\\AppData\\Roaming"),
+            ]
+        elif typ == "full":
+            all_partitions = psutil.disk_partitions()
+            for part in all_partitions:
+                # print(part.device)
+                self.partitions.append(part.device)
+            print(self.partitions)
         else:
-            print(f"Virus found in {file_path}: {result}")
-    except Exception as e:
-        print(f"Error scanning file {file_path}: {e}")
+            pass
 
+        for partition in self.partitions:
+            directory = partition.replace("\\", "/")
 
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
+            for root, dirs, files in os.walk(directory):
+                file_count += len(files)
+        print(f"Total number of files: {file_count}")
+        return file_count
 
+    # Scan a directory
+    def scan_directory(self, cd, directory_path):
+        for root, dirs, files in os.walk(directory_path):
+            for file in files:
+                file_path = fr"{os.path.join(root, file)}"
+                self.scan_a_file(cd, file_path)
 
-if not is_admin():
-    ctypes.windll.shell32.ShellExecuteW(
-        None, "runas", sys.executable, ' '.join(sys.argv), None, 1
-    )
-    sys.exit()
+    # Scan a single file
+    def scan_a_file(self, cd, file_path):
+        try:
+            result = cd.scan_file(file_path)
+            if result is None:
+                print(f"{file_path} is clean")
+            else:
+                print(f"Virus found in {file_path}: {result}")
+        except Exception as e:
+            print(f"Error scanning file {file_path}: {e}")
 
 
 @eel.expose
-def scan_files():
-    print("Starting Service.....")
-    command = f'runas /user:Administrator "net start clamd"'
-    subprocess.run(command, shell=True)
-    clamd_instance = connect_to_clamd()
-    count_files_os_walk("full")
+def start_scan():
+    anti = Anti()
+    clamd_instance = anti.connect_to_guardium()
+    anti.count_files("full")
     if clamd_instance:
-        for par in partitions:
-            scan_directory(clamd_instance, par)
+        for par in anti.partitions:
+            anti.scan_directory(clamd_instance, par)
 
-
-partitions = []
 
 screen_reso = pyautogui.size()
 
 try:
-    eel.start("index.html", mode="chrome", size=(screen_reso.width, screen_reso.height))
+    eel.start("index.html", port=0, mode="chrome", size=(screen_reso.width, screen_reso.height))
 except EnvironmentError:
     # If Chrome isn't found, fallback to Microsoft Edge on Win10 or greater
     if sys.platform in ["win32", "win64"] and int(platform.release()) >= 10:
         eel.start(
-            "index.html", mode="edge", size=(screen_reso.width, screen_reso.height)
+            "index.html", port=0, mode="edge", size=(screen_reso.width, screen_reso.height)
         )
     else:
         raise EnvironmentError("Error: System is not Windows 10 or above")
+except (SystemExit, KeyboardInterrupt):
+    sys.exit(0)

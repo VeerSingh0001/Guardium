@@ -8,7 +8,7 @@ let intervalId;
 
 function startScan() {
   // Reset progress and animation
-  eel.scan_files()
+  eel.start_scan()
   progress = 0;
   current = 0;
   progressCircle.style.background = "conic-gradient(red 0deg, #333 0deg)";
