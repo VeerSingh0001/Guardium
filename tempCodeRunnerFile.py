@@ -87,7 +87,7 @@ class Anti:
 def start_scan():
     anti = Anti()
     clamd_instance = anti.connect_to_guardium()
-    anti.count_files("quick")
+    anti.count_files("full")
     if clamd_instance:
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
