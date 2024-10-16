@@ -5,12 +5,16 @@ import platform
 import psutil
 import pyautogui
 import sys
+from threading import Lock
+from concurrent.futures import ThreadPoolExecutor
+
 
 eel.init("web")
 
 
 class Anti:
     def __init__(self):
+        self.lock = Lock()
         self.partitions = []
 
     # Connect to the ClamAV daemon
@@ -52,25 +56,31 @@ class Anti:
 
             for root, dirs, files in os.walk(directory):
                 file_count += len(files)
-        print(f"Total number of files: {file_count}")
-        return file_count
+            print(f"Total number of files: {file_count}")
+            return file_count
 
     # Scan a directory
     def scan_directory(self, cd, directory_path):
-        for root, dirs, files in os.walk(directory_path):
-            for file in files:
-                file_path = fr"{os.path.join(root, file)}"
-                self.scan_a_file(cd, file_path)
+        with ThreadPoolExecutor(max_workers=1000) as executor:  # Adjust max_workers based on your CPU
+            for root, dirs, files in os.walk(directory_path):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    executor.submit(self.scan_a_file, cd, file_path)
 
     # Scan a single file
     def scan_a_file(self, cd, file_path):
         try:
-            result = cd.scan_file(file_path)
+
+            with self.lock:
+                result = cd.scan_file(rf"{file_path}")
             if result is None:
                 print(f"{file_path} is clean")
             else:
                 print(f"Virus found in {file_path}: {result}")
         except Exception as e:
+            # with self.lock:
+            #     print(f"Error scanning file {file_path}: {e}")
+            #     print(f"File causing issue: {file_path}")
             print(f"Error scanning file {file_path}: {e}")
 
 
@@ -78,7 +88,7 @@ class Anti:
 def start_scan():
     anti = Anti()
     clamd_instance = anti.connect_to_guardium()
-    anti.count_files("full")
+    anti.count_files("quick")
     if clamd_instance:
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
@@ -87,12 +97,20 @@ def start_scan():
 screen_reso = pyautogui.size()
 
 try:
-    eel.start("index.html", port=0, mode="chrome", size=(screen_reso.width, screen_reso.height))
+    eel.start(
+        "index.html",
+        port=0,
+        mode="chrome",
+        size=(screen_reso.width, screen_reso.height),
+    )
 except EnvironmentError:
     # If Chrome isn't found, fallback to Microsoft Edge on Win10 or greater
     if sys.platform in ["win32", "win64"] and int(platform.release()) >= 10:
         eel.start(
-            "index.html", port=0, mode="edge", size=(screen_reso.width, screen_reso.height)
+            "index.html",
+            port=0,
+            mode="edge",
+            size=(screen_reso.width, screen_reso.height),
         )
     else:
         raise EnvironmentError("Error: System is not Windows 10 or above")
