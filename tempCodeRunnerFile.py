@@ -7,6 +7,7 @@ import pyautogui
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
+import asyncio,datetime
 
 eel.init("web")
 
@@ -30,8 +31,21 @@ class Anti:
             print("Could not connect to Guardium daemon.")
             return None
 
+    async def count_files_in_directory_async(self, directory):
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self.count_files_in_directory, directory)
+
+    def count_files_in_directory(self, directory):
+        file_count = 0
+        try:
+            for _, _, files in os.walk(directory):
+                file_count += len(files)
+        except Exception as e:
+            print(f"Error counting files in {directory}: {e}")
+        return file_count
+
     #  Count the total number of files to be scanned
-    def count_files(self, typ):
+    async def count_files(self, typ):
         file_count = 0
         if typ == "quick":
             self.partitions = [
@@ -50,21 +64,33 @@ class Anti:
         else:
             pass
 
-        for partition in self.partitions:
-            directory = partition.replace("\\", "/")
+        tasks = [self.count_files_in_directory_async(partition.replace("\\", "/")) for partition in self.partitions]
+        results = await asyncio.gather(*tasks)
 
-            for root, dirs, files in os.walk(directory):
-                file_count += len(files)
-            print(f"Total number of files: {file_count}")
-            return file_count
+        file_count = sum(results)
+        print(f"Total number of files: {file_count}")
+        return file_count
+
+        # for partition in self.partitions:
+        #     # directory = partition.replace("\\", "/")
+        #
+        #     for root, dirs, files in os.walk(partition):
+        #         file_count += len(files)
+        #     print(f"Total number of files: {file_count}")
+        #     return file_count
 
     # Scan a directory
     def scan_directory(self, cd, directory_path):
-        with ThreadPoolExecutor(max_workers=1000) as executor:  # Adjust max_workers based on your CPU
-            for root, dirs, files in os.walk(directory_path):
+        with ThreadPoolExecutor(max_workers=(os.cpu_count() * 10)) as executor:  # Adjust max_workers based on your CPU
+            for root, _, files in os.walk(directory_path):
                 for file in files:
                     file_path = os.path.join(root, file)
                     executor.submit(self.scan_a_file, cd, file_path)
+                    if file_path == r"C:\Windows\System32\Firewall.cpl":
+                        # print()
+                        break
+                break
+            
 
     # Scan a single file
     def scan_a_file(self, cd, file_path):
@@ -87,12 +113,12 @@ class Anti:
 def start_scan():
     anti = Anti()
     clamd_instance = anti.connect_to_guardium()
-    anti.count_files("full")
+    asyncio.run(anti.count_files("quick"))
     if clamd_instance:
+        starting_time = datetime.datetime.now()
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
-
-
+        print(f"Total time: {datetime.datetime.now() - starting_time}")
 screen_reso = pyautogui.size()
 
 try:

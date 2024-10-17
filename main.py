@@ -9,7 +9,6 @@ from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
 
-eel.init("web")
 
 
 class Anti:
@@ -54,15 +53,15 @@ class Anti:
         for partition in self.partitions:
             directory = partition.replace("\\", "/")
 
-            for root, dirs, files in os.walk(directory):
+            for _, _, files in os.walk(directory):
                 file_count += len(files)
             print(f"Total number of files: {file_count}")
             return file_count
 
     # Scan a directory
     def scan_directory(self, cd, directory_path):
-        with ThreadPoolExecutor(max_workers=1000) as executor:  # Adjust max_workers based on your CPU
-            for root, dirs, files in os.walk(directory_path):
+        with ThreadPoolExecutor(max_workers=os.cpu_count() * 10) as executor:  # Adjust max_workers based on your CPU
+            for root, _, files in os.walk(directory_path):
                 for file in files:
                     file_path = os.path.join(root, file)
                     executor.submit(self.scan_a_file, cd, file_path)
@@ -78,9 +77,6 @@ class Anti:
             else:
                 print(f"Virus found in {file_path}: {result}")
         except Exception as e:
-            # with self.lock:
-            #     print(f"Error scanning file {file_path}: {e}")
-            #     print(f"File causing issue: {file_path}")
             print(f"Error scanning file {file_path}: {e}")
 
 
@@ -93,6 +89,7 @@ def start_scan():
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
 
+eel.init("web")
 
 screen_reso = pyautogui.size()
 
