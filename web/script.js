@@ -36,11 +36,6 @@ function startScan() {
   }, 0.05);
 }
 
-function limitString(str, noOfChars) {
-  if (str.length <= noOfChars) return str
-
-  return `${str.split('').slice(0,noOfChars).join('')}...`
-}
 
 scanButton.addEventListener("click", startScan);
 
@@ -61,6 +56,13 @@ function current_file(file_name){
 
 eel.expose(total_files)
 function total_files(num_of_files){
-  total = num_of_files;
+  // total = num_of_files;
+  total = 100
   console.log(total);
+}
+
+function limitString(str, noOfChars) {
+  if (str.length <= noOfChars) return str
+
+  return `${str.split('').slice(0,noOfChars).join('')}...`
 }

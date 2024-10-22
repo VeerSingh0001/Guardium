@@ -198,8 +198,8 @@ tbody button:hover {
   }
   
   .progress-circle {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     background: conic-gradient(
       rgb(167, 55, 55) 0deg,
       rgb(178, 35, 35) 0deg,
