@@ -1,7 +1,9 @@
 const scanButton = document.getElementById("scanButton");
 const progressCircle = document.querySelector(".progress-circle");
-const progressFile = document.querySelector(".progress_file span")
+const progressFile = document.querySelector(".progress_file")
+// const progressFile = document.querySelector(".progress_file span")
 const scan = document.getElementById("progressValue")
+const raw = document.getElementById("raw")
 
 let total = 0;
 let current = 0;
@@ -11,6 +13,10 @@ let intervalId;
 function startScan() {
   // Reset progress and animation
   scan.textContent = "Scanning"
+  raw.textContent = "Starting Scan..."
+
+  
+
   eel.start_scan("quick")
   progress = 0;
   // current = 0;
@@ -27,16 +33,29 @@ function startScan() {
       // alert("Scan Complete!");
       console.log("Scan complete");
     }
-  }, 1);
+  }, 0.05);
+}
+
+function limitString(str, noOfChars) {
+  if (str.length <= noOfChars) return str
+
+  return `${str.split('').slice(0,noOfChars).join('')}...`
 }
 
 scanButton.addEventListener("click", startScan);
+
+eel.expose(remove_raw)
+function remove_raw(){
+  raw.parentElement.removeChild(raw)
+  progressFile.insertAdjacentHTML('beforeend','<span id="content"></span>')
+}
 
 eel.expose(current_file)
 function current_file(file_name){
   current += 1;
   file = file_name;
-  progressFile.textContent = file_name;
+  const content = document.getElementById("content")
+  content.textContent = limitString(file_name,35);
   console.log(file_name);
 }
 

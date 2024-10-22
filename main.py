@@ -74,6 +74,7 @@ class Anti:
         return file_count
 
     def scan_directory(self, cd, directory_path):
+        eel.remove_raw()
         with ThreadPoolExecutor(max_workers=os.cpu_count() * 10) as executor:  # Adjust max_workers based on your CPU
             for root, _, files in os.walk(directory_path):
                 for file in files:

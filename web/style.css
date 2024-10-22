@@ -96,7 +96,24 @@
   background-color: #203a43;
 }
 
+.progress_file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.4rem;
+}
 
+ #content {
+  display: inline-block;
+  width:20rem;
+  height: 1rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.4rem;
+
+}
 
 /* Threats List */
 .threats-list {
