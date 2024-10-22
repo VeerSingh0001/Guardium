@@ -1,3 +1,4 @@
+import asyncio
 import os
 import pyclamd
 import eel
@@ -9,6 +10,34 @@ from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
 
+# Connect to the ClamAV daemon
+def connect_to_guardium():
+    try:
+        cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
+        if cd.ping():
+            # print("Connected to Guardium daemon")
+            return cd
+        else:
+            print("Failed to connect to Guardium daemon")
+            return None
+    except pyclamd.ConnectionError:
+        print("Could not connect to Guardium daemon.")
+        return None
+
+
+def count_files_in_directory(directory):
+    file_count = 0
+    try:
+        for _, _, files in os.walk(directory):
+            file_count += len(files)
+    except Exception as e:
+        print(f"Error counting files in {directory}: {e}")
+    return file_count
+
+
+async def count_files_in_directory_async(directory):
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, count_files_in_directory, directory)
 
 
 class Anti:
@@ -16,23 +45,9 @@ class Anti:
         self.lock = Lock()
         self.partitions = []
 
-    # Connect to the ClamAV daemon
-    def connect_to_guardium(self):
-        try:
-            cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
-            if cd.ping():
-                print("Connected to Guardium daemon")
-                return cd
-            else:
-                print("Failed to connect to Guardium daemon")
-                return None
-        except pyclamd.ConnectionError:
-            print("Could not connect to Guardium daemon.")
-            return None
-
     #  Count the total number of files to be scanned
-    def count_files(self, typ):
-        file_count = 0
+    async def count_files(self, typ):
+        # file_count = 0
         if typ == "quick":
             self.partitions = [
                 "C:\\Windows\\System32",
@@ -50,15 +65,14 @@ class Anti:
         else:
             pass
 
-        for partition in self.partitions:
-            directory = partition.replace("\\", "/")
+        tasks = [count_files_in_directory_async(partition.replace("\\", "/")) for partition in self.partitions]
+        results = await asyncio.gather(*tasks)
 
-            for _, _, files in os.walk(directory):
-                file_count += len(files)
-            print(f"Total number of files: {file_count}")
-            return file_count
+        file_count = sum(results)
+        print(f"Total number of files: {file_count}")
+        eel.total_files(file_count)
+        return file_count
 
-    # Scan a directory
     def scan_directory(self, cd, directory_path):
         with ThreadPoolExecutor(max_workers=os.cpu_count() * 10) as executor:  # Adjust max_workers based on your CPU
             for root, _, files in os.walk(directory_path):
@@ -71,6 +85,7 @@ class Anti:
         try:
 
             with self.lock:
+                eel.current_file(file_path)  # Change file name on Front-End
                 result = cd.scan_file(rf"{file_path}")
             if result is None:
                 print(f"{file_path} is clean")
@@ -81,13 +96,14 @@ class Anti:
 
 
 @eel.expose
-def start_scan():
+def start_scan(typ):
     anti = Anti()
-    clamd_instance = anti.connect_to_guardium()
-    anti.count_files("quick")
+    clamd_instance = connect_to_guardium()
+    asyncio.run(anti.count_files(typ))
     if clamd_instance:
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
+
 
 eel.init("web")
 

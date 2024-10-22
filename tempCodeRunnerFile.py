@@ -7,7 +7,7 @@ import pyautogui
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
-import asyncio,datetime
+import asyncio, datetime
 
 eel.init("web")
 
@@ -90,7 +90,6 @@ class Anti:
                         # print()
                         break
                 break
-            
 
     # Scan a single file
     def scan_a_file(self, cd, file_path):
@@ -119,6 +118,8 @@ def start_scan():
         for par in anti.partitions:
             anti.scan_directory(clamd_instance, par)
         print(f"Total time: {datetime.datetime.now() - starting_time}")
+
+
 screen_reso = pyautogui.size()
 
 try:
