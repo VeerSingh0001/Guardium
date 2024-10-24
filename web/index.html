@@ -1,96 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <script type="text/javascript" src="/eel.js"></script>
-  <title>Guardium</title>
-</head>
-<body>
-  <div class="container">
-    <!-- Top Navigation Bar -->
-    <header class="top-nav">
-      <div class="logo"><img src="./images/antivirus.png" alt=""></div>
-      <div class="system-status">
-        <span class="secure"><h1>Guardium</h1></span>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guardium</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- header component with guardium log and title -->
+    <header>
+      <img src="./images/antivirus.png" alt="guardium-logo" />
+      <h2>Guardium</h2>
     </header>
 
-    <!-- Main Content Wrapper -->
-    <div class="main-content">
-      <!-- Left Sidebar -->
-      <aside class="sidebar">
-        <ul class="action-list">
-          <li>Quick Scan</li>
-          <li>Full Scan</li>
-          <li>Custom Scan</li>
-          <!-- <li>Quarantine</li>
-          <li>Settings</li> -->
-        </ul>
-      </aside>
+    <!-- Main App Content -->
+    <main>
+      <!-- Scanning Spinner -->
 
-      <!-- Main Dashboard Area -->
-      <section class="dashboard">
-        <!-- System Status -->
-        <div class="status-card">
-          <!-- <h2>System Status: <span class="secure-status">Secure</span></h2>
-          <button id="scan-btn">Quick Scan</button> -->
+      <div class="scanContainer">
 
-          <!--Progress bar-->
-          <div class="progress-container">
-            <div class="progress-circle">
-              <!-- <div class="progress-value" id="progressValue"> -->
-                <button id="scanButton" class="scan-btn"><div class="progress-value" id="progressValue">Quick Scan</div></button>
-              <!-- </div> -->
+        <div class="swiper">
+          <!-- Additional required wrapper -->
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+              <div class="spinner">
+                <button>Quick Scan</button>
+              </div>
             </div>
+            <div class="swiper-slide">
+              <div class="spinner full">
+                <button>Full Scan</button>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="spinner custom">
+                <button>Custom Scan</button>
+              </div>
+            </div>
+            ...
           </div>
-          <div class="progress_file">
-            <strong>Scanning:  </strong>
-            <span id="raw">Start Scan</span>
-            <!-- <span id="content"></span> -->
-          </div>
-
+        
+          <!-- If we need navigation buttons -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        
+          <!-- If we need scrollbar -->
+          <div class="swiper-scrollbar"></div>
         </div>
 
-        <!-- Threats List -->
-        <div class="threats-list">
-          <h3>Detected Threats</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Threat Name</th>
-                <th>Risk Level</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Trojan.Win32</td>
-                <td class="high-risk">High</td>
-                <td>
-                  <button>Remove</button>
-                  <button>Quarantine</button>
-                  <button>Allow</button>
-                </td>
-              </tr>
-              <tr>
-                <td>Adware.Agent</td>
-                <td class="medium-risk">Medium</td>
-                <td>
-                  <button>Remove</button>
-                  <button>Quarantine</button>
-                  <button>Allow</button>
-                </td>
-              </tr>
-              <!-- Add more threats here -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </div>
+         <!-- Current Scan files display -->
+      <p class="current-file-container">
+        <span>Scanning: </span>
+        <!-- max length 40 then ... -->
+        <span class="current-file"
+          >C:\Program Files\Internet Explorer\images...</span
+        >
+      </p>
 
-  <script src="script.js"></script>
-</body>
+      </div>
+
+      <div class="threats">
+        <div class="row title">
+          <div class="col title">Threat</div>
+          <div class="col risk">Risk</div>
+          <div class="col actions">Action</div>
+        </div>
+       <div class="scrolls">
+        <div class="row">
+          <div class="col title">hack.exe</div>
+          <div class="col risk risk-high">High</div>
+          <div class="col actions">
+            <button>Remove</button>
+            <button>Quarantile</button>
+            <button>Allow</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col title">Super.pyx</div>
+          <div class="col risk risk-medium">Medium</div>
+          <div class="col actions">
+            <button>Remove</button>
+            <button>Quarantile</button>
+            <button>Allow</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col title">all-dalveer-program.msi</div>
+          <div class="col risk risk-low">Low</div>
+          <div class="col actions">
+            <button>Remove</button>
+            <button>Quarantile</button>
+            <button>Allow</button>
+          </div>
+        </div>
+        
+       
+      
+    
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const swiper = new Swiper('.swiper', {
+          direction: 'horizontal',
+          loop: false,
+          pagination: {
+            el: '.swiper-pagination',
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      });
+    </script>
+    
+  </body>
 </html>
