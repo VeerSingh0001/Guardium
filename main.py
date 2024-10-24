@@ -10,12 +10,13 @@ from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
 
 
+
 # Connect to the ClamAV daemon
 def connect_to_guardium():
     try:
         cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
         if cd.ping():
-            # print("Connected to Guardium daemon")
+            print("Connected to Guardium daemon")
             return cd
         else:
             print("Failed to connect to Guardium daemon")
@@ -107,6 +108,7 @@ def start_scan(typ):
 
 
 eel.init("web")
+
 
 screen_reso = pyautogui.size()
 
