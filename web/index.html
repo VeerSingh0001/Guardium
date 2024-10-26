@@ -4,15 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Guardium</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="./swiper-bundle.min.css">
 
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <!-- header component with guardium log and title -->
     <header>
-      <img src="./images/antivirus.png" alt="guardium-logo" />
-      <h2>Guardium</h2>
+      <div class="branding">
+        <img src="./images/antivirus.png" alt="guardium-logo" />
+        <h2>Guardium</h2>
+      </div>
+      <button class="btn btn-update">
+        <img src="./images/refresh-line.png" />
+        Update</button>
     </header>
 
     <!-- Main App Content -->
@@ -52,13 +57,20 @@
         </div>
 
          <!-- Current Scan files display -->
-      <p class="current-file-container">
-        <span>Scanning: </span>
-        <!-- max length 40 then ... -->
-        <span class="current-file"
-          >C:\Program Files\Internet Explorer\images...</span
-        >
-      </p>
+
+      
+        <div class="current-file-container">
+          <span>Scanning: </span>
+          <!-- max length 40 then ... -->
+          <span class="current-file"
+            >C:\Program Files\Internet Explorer\images...</span
+          >
+          <div class="center">
+            <button class="btn">
+              Cancel</button>
+          </div>
+        </div>
+    
 
       </div>
 
@@ -73,27 +85,27 @@
           <div class="col title">hack.exe</div>
           <div class="col risk risk-high">High</div>
           <div class="col actions">
-            <button>Remove</button>
-            <button>Quarantile</button>
-            <button>Allow</button>
+            <button class="btn">Remove</button>
+            <button class="btn">Quarantile</button>
+            <button class="btn">Allow</button>
           </div>
         </div>
         <div class="row">
           <div class="col title">Super.pyx</div>
           <div class="col risk risk-medium">Medium</div>
           <div class="col actions">
-            <button>Remove</button>
-            <button>Quarantile</button>
-            <button>Allow</button>
+            <button class="btn">Remove</button>
+            <button class="btn">Quarantile</button>
+            <button class="btn">Allow</button>
           </div>
         </div>
         <div class="row">
           <div class="col title">all-dalveer-program.msi</div>
           <div class="col risk risk-low">Low</div>
           <div class="col actions">
-            <button>Remove</button>
-            <button>Quarantile</button>
-            <button>Allow</button>
+            <button class="btn">Remove</button>
+            <button class="btn">Quarantile</button>
+            <button class="btn">Allow</button>
           </div>
         </div>
         
@@ -102,7 +114,7 @@
     
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="./swiper-bundle.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', (event) => {
         const swiper = new Swiper('.swiper', {
