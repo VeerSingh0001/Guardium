@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="/eel.js"></script>
   </head>
   <body>
-    <!-- header component with guardium log and title -->
+    <!-- header component with guardium logo and title -->
     <header>
       <img src="./images/antivirus.png" alt="guardium-logo" />
       <h2>Guardium</h2>
@@ -27,17 +28,17 @@
             <!-- Slides -->
             <div class="swiper-slide">
               <div class="spinner">
-                <button>Quick Scan</button>
+                <button onclick="startScan('quick')">Quick Scan</button>
               </div>
             </div>
             <div class="swiper-slide">
               <div class="spinner full">
-                <button>Full Scan</button>
+                <button onclick="startScan('full')">Full Scan</button>
               </div>
             </div>
             <div class="swiper-slide">
               <div class="spinner custom">
-                <button>Custom Scan</button>
+                <button onclick="startScan('custom')">Custom Scan</button>
               </div>
             </div>
             ...
@@ -56,7 +57,7 @@
         <span>Scanning: </span>
         <!-- max length 40 then ... -->
         <span class="current-file"
-          >C:\Program Files\Internet Explorer\images...</span
+          >Start Scan</span
         >
       </p>
 
@@ -101,6 +102,8 @@
       
     
     </main>
+
+    <script src="script.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>

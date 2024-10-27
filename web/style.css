@@ -69,7 +69,7 @@ header img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: conic-gradient(var(--blue) 80deg, var(--black) 80deg);
+  background: conic-gradient(var(--blue) 0deg, var(--black) 0deg);
 }
 
 .spinner button {
@@ -108,7 +108,7 @@ header img {
 
 .current-file {
   color: #b3b3b3;
-  text-transform: lowercase;
+  /* text-transform: lowercase; */
   font-weight: 300;
   font-size: 0.8rem;
 }
