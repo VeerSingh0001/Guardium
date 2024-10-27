@@ -7,8 +7,9 @@
 
 const currentFile = document.querySelector(".current-file-container .current-file")
 const spinner = document.querySelectorAll(".spinner")
+const cancle = document.querySelector(".center button")
 
-console.log(spinner)
+// console.log(cancle)
 
 let total = 0;
 let current = 0;
@@ -44,6 +45,9 @@ function startScan(type) {
     }
   }, 1);
 }
+
+
+cancle.addEventListener("click", function(event){eel.cancel_scanning()})
 
 // scanButton.addEventListener("click", startScan);
 
