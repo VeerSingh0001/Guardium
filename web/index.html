@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="./swiper-bundle.min.css">
 
     <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="/eel.js"></script>
   </head>
   <body>
-    <!-- header component with guardium log and title -->
+    <!-- header component with guardium logo and title -->
     <header>
       <div class="branding">
         <img src="./images/antivirus.png" alt="guardium-logo" />
@@ -32,17 +33,17 @@
             <!-- Slides -->
             <div class="swiper-slide">
               <div class="spinner">
-                <button>Quick Scan</button>
+                <button onclick="startScan('quick')">Quick Scan</button>
               </div>
             </div>
             <div class="swiper-slide">
               <div class="spinner full">
-                <button>Full Scan</button>
+                <button onclick="startScan('full')">Full Scan</button>
               </div>
             </div>
             <div class="swiper-slide">
               <div class="spinner custom">
-                <button>Custom Scan</button>
+                <button onclick="startScan('custom')">Custom Scan</button>
               </div>
             </div>
             ...
@@ -58,6 +59,7 @@
 
          <!-- Current Scan files display -->
 
+
       
         <div class="current-file-container">
           <span>Scanning: </span>
@@ -70,7 +72,7 @@
               Cancel</button>
           </div>
         </div>
-    
+
 
       </div>
 
@@ -114,7 +116,9 @@
     
     </main>
 
+
     <script src="./swiper-bundle.min.js"></script>
+
     <script>
       document.addEventListener('DOMContentLoaded', (event) => {
         const swiper = new Swiper('.swiper', {

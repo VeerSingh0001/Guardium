@@ -1,4 +1,5 @@
 copy clamAV "C:\Program Files\ClamAV"
 cd "C:\Program Files\ClamAV"
 freshclam
+clamd --install-service
 net start clamd

@@ -1,6 +1,5 @@
 import asyncio
 import os
-import pyclamd
 import eel
 import platform
 import psutil
@@ -8,7 +7,8 @@ import pyautogui
 import sys
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor
-
+import pyclamd
+from win32security import GetFileSecurity, OWNER_SECURITY_INFORMATION, LookupAccountSid
 
 
 # Connect to the ClamAV daemon
@@ -26,6 +26,7 @@ def connect_to_guardium():
         return None
 
 
+# Count the total files number in the directory
 def count_files_in_directory(directory):
     file_count = 0
     try:
@@ -48,7 +49,6 @@ class Anti:
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
-        # file_count = 0
         if typ == "quick":
             self.partitions = [
                 "C:\\Windows\\System32",
@@ -60,13 +60,15 @@ class Anti:
         elif typ == "full":
             all_partitions = psutil.disk_partitions()
             for part in all_partitions:
-                # print(part.device)
                 self.partitions.append(part.device)
-            print(self.partitions)
+            # print(self.partitions)
         else:
             pass
 
-        tasks = [count_files_in_directory_async(partition.replace("\\", "/")) for partition in self.partitions]
+        tasks = [
+            count_files_in_directory_async(partition.replace("\\", "/"))
+            for partition in self.partitions
+        ]
         results = await asyncio.gather(*tasks)
 
         file_count = sum(results)
@@ -74,9 +76,12 @@ class Anti:
         eel.total_files(file_count)
         return file_count
 
+    # Scan directory for viruses
     def scan_directory(self, cd, directory_path):
-        eel.remove_raw()
-        with ThreadPoolExecutor(max_workers=os.cpu_count() * 10) as executor:  # Adjust max_workers based on your CPU
+        # eel.remove_raw()
+        with ThreadPoolExecutor(
+            max_workers=os.cpu_count() * 10
+        ) as executor:
             for root, _, files in os.walk(directory_path):
                 for file in files:
                     file_path = os.path.join(root, file)
@@ -87,16 +92,44 @@ class Anti:
         try:
 
             with self.lock:
-                eel.current_file(file_path)  # Change file name on Front-End
+                eel.current_file(file_path)
+                owner = self.get_file_owner(file_path)
+                print(owner,self.is_owner_trusted(owner))
+                if (owner and self.is_owner_trusted(owner)) or owner == "Administrators":
+                    print(f"Skipping {file_path}, owner {owner} is trusted.")
+                    return
+            
                 result = cd.scan_file(rf"{file_path}")
-            if result is None:
-                print(f"{file_path} is clean")
-            else:
-                print(f"Virus found in {file_path}: {result}")
+                if result is None:
+                    print(f"{file_path} is clean")
+                else:
+                    print(f"Virus found in {file_path}: {result}")
         except Exception as e:
             print(f"Error scanning file {file_path}: {e}")
+# //////////////////////////////////
+    def get_file_owner(self, file_path):
+        """Get the owner of a file (Windows)"""
+        try:
+            sd = GetFileSecurity(file_path, OWNER_SECURITY_INFORMATION)
+            owner_sid = sd.GetSecurityDescriptorOwner()
+            name, domain, _ = LookupAccountSid(None, owner_sid)
+            print(name)
+            return name
+        except Exception as e:
+            print(f"Error getting owner of {file_path}: {e}")
+            return None
+
+    def is_owner_trusted(self, owner):
+        """Determine if a file owner is a system user (trusted)"""
+        # Consider 'SYSTEM', 'Administrator', or 'TrustedInstaller' as trusted
+        if owner in ["SYSTEM", "Administrators", "TrustedInstaller"]:
+            return True
+        else:
+            return False
 
 
+# //////////////////////////////////////
+# Function to start the scanning functionalities.
 @eel.expose
 def start_scan(typ):
     anti = Anti()
@@ -107,7 +140,7 @@ def start_scan(typ):
             anti.scan_directory(clamd_instance, par)
 
 
-eel.init("web")
+eel.init("web")  # initialize eel
 
 
 screen_reso = pyautogui.size()
