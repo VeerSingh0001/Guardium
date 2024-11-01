@@ -13,6 +13,7 @@ const cancle = document.querySelector(".center button")
 
 let total = 0;
 let current = 0;
+let degreePerFile = 0;
 let progress = 0;
 let isScanning = false;
 let intervalId;
@@ -31,8 +32,7 @@ function startScan(type) {
 
   // Start the progress
   intervalId = setInterval(() => {
-    progress = (current / total) * 100; // Increase progress
-    // spinner.background = `conic-gradient(red ${progress}deg, #333 ${progress}deg)`;
+    progress += degreePerFile; // Increase progress
     // console.log(progress)
     spinner[0].style.background = `conic-gradient(var(--blue) ${progress}deg, var(--black) ${progress}deg)`;
     spinner[1].style.background = `conic-gradient(var(--red) ${progress}deg, var(--black) ${progress}deg)`;
@@ -48,31 +48,18 @@ function startScan(type) {
 
 
 cancle.addEventListener("click", function(event){eel.cancel_scanning()})
-
-// scanButton.addEventListener("click", startScan);
-
-// Change text of main scan button according to clicked type on the sidebar.
-// actionList.addEventListener("click", function (event) {
-//   if (isScanning) return
-//   const value = event.target.textContent;
-//   if (event.target.textContent.includes("\n")) return;
-//   scan.textContent = value
-// });
-
-// remove "Start Scan" span and insert span for inserting
-
-// eel.expose(remove_raw);
-// function remove_raw() {
-//   raw.parentElement.removeChild(raw);
-//   progressFile.insertAdjacentHTML("beforeend", '<span id="content"></span>');
-// }
+eel.expose(logging)
+function logging(logs){
+  console.log(logs)
+}
 
 // get total number of files from the python file
 eel.expose(total_files);
 function total_files(num_of_files) {
   total = num_of_files;
   // total = 100;
-  console.log(total);
+  degreePerFile = 360 / total
+  console.log(total,degreePerFile);
 }
 
 // show the current scanning file on the front-end

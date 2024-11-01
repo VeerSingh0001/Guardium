@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f85f0d3-7a26-4b99-8018-3b902e60a326" name="Changes" comment="Initial commit">
+    <list default="true" id="7f85f0d3-7a26-4b99-8018-3b902e60a326" name="Changes" comment="Format code in python file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +49,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Batch.service.executor": "Run",
+    "Python.anti.executor": "Run",
     "Python.main.executor": "Run",
     "Python.run.executor": "Run",
     "Python.tempCodeRunnerFile.executor": "Run",
@@ -204,11 +205,20 @@
       <option name="project" value="LOCAL" />
       <updated>1729038085803</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Format code in python file">
+      <option name="closed" value="true" />
+      <created>1730045035373</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1730045035373</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="Format code in python file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Format code in python file" />
   </component>
 </project>
