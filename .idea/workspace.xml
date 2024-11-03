@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f85f0d3-7a26-4b99-8018-3b902e60a326" name="Changes" comment="Showing detected viruses on front-end functionality added">
+    <list default="true" id="7f85f0d3-7a26-4b99-8018-3b902e60a326" name="Changes" comment="severity bug solved">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/anti.py" beforeDir="false" afterPath="$PROJECT_DIR$/anti.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/script.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -264,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730635346545</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="severity bug solved">
+      <option name="closed" value="true" />
+      <created>1730643622370</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1730643622370</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -273,6 +282,7 @@
     <MESSAGE value="Organize code and correct progress bar logic." />
     <MESSAGE value="Showing detected viruses on front-end functionality added" />
     <MESSAGE value="added cancel scan functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="added cancel scan functionality" />
+    <MESSAGE value="severity bug solved" />
+    <option name="LAST_COMMIT_MESSAGE" value="severity bug solved" />
   </component>
 </project>

@@ -18,6 +18,7 @@ class Anti:
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
+        self.partitions = []
         if typ == "quick":
             self.partitions = [
                 "C:\\Windows\\System32",
@@ -34,7 +35,6 @@ class Anti:
             root = Tk()
             dirct = filedialog.askdirectory().replace("/", "\\")
             root.destroy()
-            self.partitions = []
             self.partitions.append(dirct)
 
         tasks = [
@@ -125,7 +125,6 @@ class Anti:
     # Determine the severity based on virus name
     @staticmethod
     def determine_severity(result, path):
-        print(str(result[path][1]).lower())
         if any (keyword in (str(result[path][1]).lower()) for keyword in ['trojan', 'worm', 'malware']):
             return 'High'
         elif 'adware' in str(result[path][1]).lower():

@@ -24,8 +24,7 @@ function startScan(type) {
     spinner[1].style.background = `conic-gradient(var(--red) ${progress}deg, var(--black) ${progress}deg)`;
     spinner[2].style.background = `conic-gradient(var(--purple) ${progress}deg, var(--black) ${progress}deg)`;
 
-    // console.log(progress);
-    if (progress > 359) {
+    if (progress > 360) {
       console.log("Scan complete");
       eel.show_result();
       clearInterval(intervalId);
