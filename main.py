@@ -6,14 +6,18 @@ import sys
 from connect import Connect
 from anti import Anti
 
-anti = None
+
+
+anti = Anti()
 # Function to start the scanning functionalities.
 @eel.expose
 def start_scan(typ):
     global anti
+    anti.stop_scan = False
+    anti.virus_results = []
     conn = Connect()
     guardium_instance = conn.connect_to_guardium()
-    anti = Anti()
+    # anti = Anti()
 
     asyncio.run(anti.count_files(typ))
     if guardium_instance:
@@ -21,14 +25,18 @@ def start_scan(typ):
             anti.scan_directory(guardium_instance, par)
 
 
-@eel.expose
-def cancel_scanning():
-    global anti
-    print("Stopping scan")
-    eel.logging("Stopping scan")
-    del anti
-    anti = None
 
+@eel.expose
+def cancel_scan():
+    global anti
+    anti.stop_scan = True
+    print("canceling")
+
+@eel.expose
+def show_result():
+    global anti
+    eel.showResult(anti.virus_results)
+    # print(anti.virus_results[0])
 
 eel.init("web")  # initialize eel
 

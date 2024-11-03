@@ -7,14 +7,18 @@ import asyncio
 import eel
 from win32security import GetFileSecurity, OWNER_SECURITY_INFORMATION, LookupAccountSid
 
+
 class Anti:
     def __init__(self):
         self.lock = Lock()
         self.partitions = []
-        self.stop_scan = False
-
-    def __del__(self):
         self.stop_scan = True
+        self.virus_results = []  # List to store virus scan results
+
+    @eel.expose
+    def cancel_scanning(self):
+        self.stop_scan = True
+        print("Stopping scan..........")
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
@@ -34,9 +38,10 @@ class Anti:
         else:
             print("custom")
             root = Tk()
-            # root.withdraw()  # Hide the root window
-            self.partitions = [filedialog.askdirectory()]
-            print("after")
+            dirct = filedialog.askdirectory().replace("/", "\\")
+            root.destroy()
+            self.partitions = []
+            self.partitions.append(dirct)
 
         tasks = [
             self.count_files_in_directory_async(partition.replace("\\", "/"))
@@ -87,15 +92,23 @@ class Anti:
             with self.lock:
                 eel.current_file(file_path)
                 owner = self.get_file_owner(file_path)
-                print(owner, self.is_owner_trusted(owner))
-                if (owner and self.is_owner_trusted(owner)) or owner == "Administrators":
-                    print(f"Skipping {file_path}, owner {owner} is trusted.")
+                # print(owner, self.is_owner_trusted(owner))
+                if owner and self.is_owner_trusted(owner):
+                    # print(f"Skipping {file_path}, owner {owner} is trusted.")
                     return
 
                 result = cd.scan_file(rf"{file_path}")
                 if result is None:
                     print(f"{file_path} is clean")
                 else:
+                    virus_name = os.path.basename(file_path)
+                    severity = self.determine_severity(virus_name)
+                    # Store the result in the virus results list
+                    self.virus_results.append({
+                        'virus_name': virus_name,
+                        'virus_path': file_path,
+                        'severity': severity,
+                    })
                     print(f"Virus found in {file_path}: {result}")
         except Exception as e:
             print(f"Error scanning file {file_path}: {e}")
@@ -119,7 +132,17 @@ class Anti:
     def is_owner_trusted(owner):
         """Determine if a file owner is a system user (trusted)"""
         # Consider 'SYSTEM', 'Administrator', or 'TrustedInstaller' as trusted
-        if owner in ["SYSTEM", "Administrators", "TrustedInstaller"]:
+        if owner in ["SYSTEM", "TrustedInstaller"]:
             return True
         else:
             return False
+
+    # Determine the severity based on virus name
+    @staticmethod
+    def determine_severity(virus_name):
+        if any(keyword in virus_name.lower() for keyword in ['trojan', 'worm', 'malware']):
+            return 'High'
+        elif 'adware' in virus_name.lower():
+            return 'Medium'
+        else:
+            return 'Low'

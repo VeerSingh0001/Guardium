@@ -1,82 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guardium</title>
-    <link rel="stylesheet" href="./swiper-bundle.min.css">
 
-    <link rel="stylesheet" href="./style.css" />
-    <script type="text/javascript" src="/eel.js"></script>
-  </head>
-  <body>
-    <!-- header component with guardium logo and title -->
-    <header>
-      <div class="branding">
-        <img src="./images/antivirus.png" alt="guardium-logo" />
-        <h2>Guardium</h2>
-      </div>
-      <button class="btn btn-update">
-        <img src="./images/refresh-line.png" />
-        Update</button>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guardium</title>
+  <link rel="stylesheet" href="./swiper-bundle.min.css">
 
-    <!-- Main App Content -->
-    <main>
-      <!-- Scanning Spinner -->
+  <link rel="stylesheet" href="./style.css" />
+  <script type="text/javascript" src="/eel.js"></script>
+</head>
 
-      <div class="scanContainer">
+<body>
+  <!-- header component with guardium logo and title -->
+  <header>
+    <div class="branding">
+      <img src="./images/antivirus.png" alt="guardium-logo" />
+      <h2>Guardium</h2>
+    </div>
+    <button class="btn btn-update">
+      <img src="./images/refresh-line.png" />
+      Update</button>
+  </header>
 
-        <div class="swiper">
-          <!-- Additional required wrapper -->
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-              <div class="spinner">
-                <button onclick="startScan('quick')">Quick Scan</button>
-              </div>
+  <!-- Main App Content -->
+  <main id="main-content">
+    <!-- Scanning Spinner -->
+
+    <div class="scanContainer">
+
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <div class="spinner">
+              <button onclick="startScan('quick')">Quick Scan</button>
             </div>
-            <div class="swiper-slide">
-              <div class="spinner full">
-                <button onclick="startScan('full')">Full Scan</button>
-              </div>
-            </div>
-            <div class="swiper-slide">
-              <div class="spinner custom">
-                <button onclick="startScan('custom')">Custom Scan</button>
-              </div>
-            </div>
-            ...
           </div>
-        
-          <!-- If we need navigation buttons -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        
-          <!-- If we need scrollbar -->
-          <div class="swiper-scrollbar"></div>
+          <div class="swiper-slide">
+            <div class="spinner full">
+              <button onclick="startScan('full')">Full Scan</button>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="spinner custom">
+              <button onclick="startScan('custom')">Custom Scan</button>
+            </div>
+          </div>
+          ...
         </div>
 
-         <!-- Current Scan files display -->
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
 
-
-      
-        <div class="current-file-container">
-          <span>Scanning: </span>
-          <!-- max length 40 then ... -->
-          <span class="current-file"
-            >C:\Program Files\Internet Explorer\images...</span
-          >
-          <div class="center">
-            <button class="btn ">
-              Cancel</button>
-          </div>
-        </div>
-
-
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
       </div>
 
-      <div class="threats">
+      <!-- Current Scan files display -->
+
+
+
+      <div class="current-file-container">
+        <span>Scanning: </span>
+        <!-- max length 40 then ... -->
+        <span class="current-file">C:\Program Files\Internet Explorer\images...</span>
+        <div class="center">
+          <button class="btn ">
+            Cancel</button>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="virus-detect"></div>
+
+    <!-- <div class="threats">
         <div class="row title">
           <div class="col title">Threat</div>
           <div class="col risk">Risk</div>
@@ -87,9 +88,9 @@
           <div class="col title">hack.exe</div>
           <div class="col risk risk-high">High</div>
           <div class="col actions">
-            <button class="btn">Remove</button>
-            <button class="btn">Quarantile</button>
-            <button class="btn">Allow</button>
+            <button class="btn" onclick="action('remove')>Remove</button>
+            <button class="btn" onclick="action('quarantine')>Quarantine</button>
+            <button class="btn" onclick="action('allow')>Allow</button>
           </div>
         </div>
         <div class="row">
@@ -109,7 +110,47 @@
             <button class="btn">Quarantile</button>
             <button class="btn">Allow</button>
           </div>
+        </div> -->
+
+
+    <!-- <div class="threats">
+      <div class="row title">
+        <div class="col title">Threat</div>
+        <div class="col risk">Risk</div>
+        <div class="col actions">Action</div>
+      </div>
+      <div class="scrolls">
+        <div class="result">No virus founded</div> -->
+        <!-- <div class="row">
+          <div class="col title">hack.exe</div>
+          <div class="col risk risk-high">High</div>
+          <div class="col actions">
+            <button class="btn" onclick="action('remove')">Remove</button>
+            <button class="btn" onclick="acton('quarantine')">Quarantine</button>
+            <button class="btn" onclick="action('allow')">Allow</button>
+          </div>
         </div>
+        <div class="row">
+          <div class="col title">Super.pyx</div>
+          <div class="col risk risk-medium">Medium</div>
+          <div class="col actions">
+            <button class="btn">Remove</button>
+            <button class="btn">Quarantile</button>
+            <button class="btn">Allow</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col title">all-dalveer-program.msi</div>
+          <div class="col risk risk-low">Low</div>
+          <div class="col actions">
+            <button class="btn">Remove</button>
+            <button class="btn">Quarantile</button>
+            <button class="btn">Allow</button>
+          </div>
+        </div> -->
+      <!-- </div>
+    </div> -->
+
     </main>
 
     <script src="script.js"></script>
@@ -130,6 +171,7 @@
         });
       });
     </script>
-    
-  </body>
+
+</body>
+
 </html>

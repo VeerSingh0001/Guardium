@@ -159,6 +159,14 @@ header {
   gap: 0.5rem;
 }
 
+.result{
+  color: #20c56f;
+  display: flex;
+  justify-self: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .btn {
   border: none;
   background: #fff;
