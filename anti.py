@@ -1,10 +1,11 @@
-import os
-import psutil
-from threading import Lock
-from concurrent.futures import ThreadPoolExecutor
-from tkinter import Tk, filedialog
 import asyncio
+import os
+from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
+from tkinter import Tk, filedialog
+
 import eel
+import psutil
 from win32security import GetFileSecurity, OWNER_SECURITY_INFORMATION, LookupAccountSid
 
 
@@ -12,13 +13,13 @@ class Anti:
     def __init__(self):
         self.lock = Lock()
         self.partitions = []
-        self.stop_scan = True
+        self.stop_scan = False
         self.virus_results = []  # List to store virus scan results
 
-    @eel.expose
-    def cancel_scanning(self):
-        self.stop_scan = True
-        print("Stopping scan..........")
+    # @eel.expose
+    # def cancel_scanning(self):
+    #     self.stop_scan = True
+    #     print("Stopping scan..........")
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
@@ -36,7 +37,7 @@ class Anti:
                 self.partitions.append(part.device)
             # print(self.partitions)
         else:
-            print("custom")
+            # print("custom")
             root = Tk()
             dirct = filedialog.askdirectory().replace("/", "\\")
             root.destroy()
@@ -71,6 +72,7 @@ class Anti:
 
     # Scan directory for viruses
     def scan_directory(self, cd, directory_path):
+        # print(self.stop_scan)
         # eel.remove_raw()
         with ThreadPoolExecutor(
                 max_workers=os.cpu_count() * 10
@@ -78,16 +80,20 @@ class Anti:
             for root, _, files in os.walk(directory_path):
                 if self.stop_scan:
                     # exit(1)
-                    break
+                    # break
+                    return
                 for file in files:
                     if self.stop_scan:
                         # exit()
-                        break
+                        # break
+                        return
                     file_path = os.path.join(root, file)
                     executor.submit(self.scan_a_file, cd, file_path)
 
     # Scan a single file
     def scan_a_file(self, cd, file_path):
+        if self.stop_scan:
+            return  # Exit if scanning was canceled
         try:
             with self.lock:
                 eel.current_file(file_path)
@@ -99,7 +105,8 @@ class Anti:
 
                 result = cd.scan_file(rf"{file_path}")
                 if result is None:
-                    print(f"{file_path} is clean")
+                    # print(f"{file_path} is clean")
+                    pass
                 else:
                     virus_name = os.path.basename(file_path)
                     severity = self.determine_severity(virus_name)
@@ -109,7 +116,7 @@ class Anti:
                         'virus_path': file_path,
                         'severity': severity,
                     })
-                    print(f"Virus found in {file_path}: {result}")
+                    # print(f"Virus found in {file_path}: {result}")
         except Exception as e:
             print(f"Error scanning file {file_path}: {e}")
 

@@ -1,25 +1,21 @@
 
-const currentFile = document.querySelector(
-  ".current-file-container .current-file"
-);
+const currentFile = document.querySelector(".current-file-container .current-file");
 const spinner = document.querySelectorAll(".spinner");
-const cancle = document.querySelector(".center button");
-// const main = document.getElementById("main-content");
+const cancel = document.querySelector(".center button");
 const scanResult = document.getElementsByClassName("virus-detect")[0]
 
 
 let total = 0;
 let degreePerFile = 0;
 let progress = 0;
-let isScanning = false;
-let intervalId;
+let intervalId
 
 function startScan(type) {
   // Reset progress and animation
   currentFile.textContent = "Starting Scan...";
   isScanning = true;
 
-  eel.start_scan(type);
+  eel.run_scan(type);
 
   progress = 0;
   // Start the progress
@@ -28,9 +24,8 @@ function startScan(type) {
     spinner[1].style.background = `conic-gradient(var(--red) ${progress}deg, var(--black) ${progress}deg)`;
     spinner[2].style.background = `conic-gradient(var(--purple) ${progress}deg, var(--black) ${progress}deg)`;
 
-    console.log(progress);
+    // console.log(progress);
     if (progress > 359) {
-      isScanning = false;
       console.log("Scan complete");
       eel.show_result();
       clearInterval(intervalId);
@@ -39,9 +34,12 @@ function startScan(type) {
 }
 
 function cancelScan() {
+  progress = 0
   eel.cancel_scan(); // Call the Python cancel_scan method
+  clearInterval(intervalId)
+  currentFile.textContent = "Scanning Stopped"
 }
-cancle.addEventListener("click", cancelScan);
+cancel.addEventListener("click", cancelScan);
 
 
 // Get total number of files from the python file
@@ -71,7 +69,7 @@ function limitString(str, noOfChars) {
 // Show detected viruses
 eel.expose(showResult);
 function showResult(result) {
-  console.log(result);
+  // console.log(result);
   scanResult.innerHTML = ''
   scanResult.insertAdjacentHTML(
     "beforeend",
@@ -93,7 +91,7 @@ function showResult(result) {
     );
   } else {
     result.forEach((res) => {
-      console.log(res);
+      // console.log(res);
       scrolls.insertAdjacentHTML(
         "beforeend",
         `<div class="row">
