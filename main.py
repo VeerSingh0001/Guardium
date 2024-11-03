@@ -35,9 +35,6 @@ def start_scan(typ):
 @eel.expose
 def cancel_scan():
     global anti
-    # anti.stop_scan = True
-    print("canceling....")
-    # anti.cancel_scanning()
     anti.stop_scan = True
 
 

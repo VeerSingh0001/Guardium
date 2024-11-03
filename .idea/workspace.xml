@@ -269,6 +269,7 @@
     <MESSAGE value="Format code in python file" />
     <MESSAGE value="Organize code and correct progress bar logic." />
     <MESSAGE value="Showing detected viruses on front-end functionality added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Showing detected viruses on front-end functionality added" />
+    <MESSAGE value="added cancel scan functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="added cancel scan functionality" />
   </component>
 </project>

@@ -47,7 +47,6 @@ eel.expose(total_files);
 function total_files(num_of_files) {
   total = num_of_files;
   degreePerFile = 360 / total;
-  console.log(total, degreePerFile);
 }
 
 // Show the current scanning file on the front-end
@@ -69,7 +68,6 @@ function limitString(str, noOfChars) {
 // Show detected viruses
 eel.expose(showResult);
 function showResult(result) {
-  // console.log(result);
   scanResult.innerHTML = ''
   scanResult.insertAdjacentHTML(
     "beforeend",
@@ -91,7 +89,6 @@ function showResult(result) {
     );
   } else {
     result.forEach((res) => {
-      // console.log(res);
       scrolls.insertAdjacentHTML(
         "beforeend",
         `<div class="row">
