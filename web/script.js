@@ -111,5 +111,4 @@ function showResult(result) {
   }
 }
 
-function action(act) {}
 
