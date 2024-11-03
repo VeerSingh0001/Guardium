@@ -93,7 +93,7 @@ class Anti:
                     pass
                 else:
                     virus_name = os.path.basename(file_path)
-                    severity = self.determine_severity(virus_name)
+                    severity = self.determine_severity(result, file_path)
                     self.virus_results.append({
                         'virus_name': virus_name,
                         'virus_path': file_path,
@@ -124,10 +124,11 @@ class Anti:
 
     # Determine the severity based on virus name
     @staticmethod
-    def determine_severity(virus_name):
-        if any(keyword in virus_name.lower() for keyword in ['trojan', 'worm', 'malware']):
+    def determine_severity(result, path):
+        print(str(result[path][1]).lower())
+        if any (keyword in (str(result[path][1]).lower()) for keyword in ['trojan', 'worm', 'malware']):
             return 'High'
-        elif 'adware' in virus_name.lower():
+        elif 'adware' in str(result[path][1]).lower():
             return 'Medium'
         else:
             return 'Low'
