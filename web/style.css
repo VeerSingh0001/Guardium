@@ -138,6 +138,10 @@ header {
   overflow-y: auto;
 }
 
+.scrolls::-webkit-scrollbar {
+  width: 0;
+}
+
 .threats .row {
   display: flex;
 }

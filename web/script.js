@@ -129,12 +129,11 @@ function limitString(str, noOfChars) {
 eel.expose(showResult);
 function showResult(result) {
   const scrolls = document.getElementsByClassName("scrolls")[0]
-  result.forEach((res) => {
     scrolls.insertAdjacentHTML(
       "beforeend",
       `<div class="row">
-          <div class="col title">${res["virus_name"]}</div>
-          <div class="col risk risk-${res["severity"].toLowerCase()}">${res["severity"]}</div>
+          <div class="col title">${result["virus_name"]}</div>
+          <div class="col risk risk-${result["severity"].toLowerCase()}">${result["severity"]}</div>
           <div class="col actions">
             <button class="btn" onclick="action('remove')">Remove</button>
             <button class="btn" onclick="action('quarantine')">Quarantine</button>
@@ -154,5 +153,4 @@ function showResult(result) {
       //   </div>
       // `
     );
-  });
-}
+  }

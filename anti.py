@@ -94,11 +94,17 @@ class Anti:
                 else:
                     virus_name = os.path.basename(file_path)
                     severity = self.determine_severity(result, file_path)
-                    self.virus_results.append({
+                    # self.virus_results.append({
+                    #     'virus_name': virus_name,
+                    #     'virus_path': file_path,
+                    #     'severity': severity,
+                    # })
+                    virus_dict = {
                         'virus_name': virus_name,
                         'virus_path': file_path,
                         'severity': severity,
-                    })
+                    }
+                    eel.showResult(virus_dict)
         except Exception as e:
             print(f"Error scanning file {file_path}: {e}")
 
