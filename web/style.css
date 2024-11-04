@@ -114,6 +114,8 @@ header {
 .current-file {
   color: #b3b3b3;
   /* text-transform: lowercase; */
+  width: 16rem;
+  display: inline-block;
   font-weight: 300;
   font-size: 0.8rem;
 }
@@ -124,6 +126,10 @@ header {
   font-size: 0.8rem;
   font-weight: 300;
   color: whitesmoke;
+}
+
+.hide {
+  display: none;
 }
 
 .scrolls {
