@@ -14,7 +14,7 @@ class Anti:
         self.lock = Lock()
         self.partitions = []
         self.stop_scan = False
-        self.virus_results = []  # List to store virus scan results
+        self.total_viruses = 0  # List to store virus scan results
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
@@ -92,13 +92,9 @@ class Anti:
                 if result is None:
                     pass
                 else:
+                    self.total_viruses += 1
                     virus_name = os.path.basename(file_path)
                     severity = self.determine_severity(result, file_path)
-                    # self.virus_results.append({
-                    #     'virus_name': virus_name,
-                    #     'virus_path': file_path,
-                    #     'severity': severity,
-                    # })
                     virus_dict = {
                         'virus_name': virus_name,
                         'virus_path': file_path,

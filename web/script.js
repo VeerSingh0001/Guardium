@@ -68,7 +68,7 @@ function startScan(type) {
     // spinner[1].style.background = `conic-gradient(var(--red) ${progress}deg, var(--black) ${progress}deg)`;
     // spinner[2].style.background = `conic-gradient(var(--purple) ${progress}deg, var(--black) ${progress}deg)`;
     const progressId = document.getElementById(`progress-${type}`);
-    progressId.classList.remove("hide")
+    progressId.classList.remove("hide");
     progressId.textContent = `${
       Math.round((currentFileNumber / total) * 100) || 0
     }%`;
@@ -128,29 +128,38 @@ function limitString(str, noOfChars) {
 // Show detected viruses
 eel.expose(showResult);
 function showResult(result) {
-  const scrolls = document.getElementsByClassName("scrolls")[0]
-    scrolls.insertAdjacentHTML(
-      "beforeend",
-      `<div class="row">
+  const res = document.getElementsByClassName("result")[0]
+  res.classList.add("hide")
+  const scrolls = document.getElementsByClassName("scrolls")[0];
+  
+  const id = `${Math.round(Math.random() * 1_000_000)}${Date.now()}`
+  scrolls.insertAdjacentHTML(
+    "beforeend",
+    `<div class="row" id="${id}">
           <div class="col title">${result["virus_name"]}</div>
-          <div class="col risk risk-${result["severity"].toLowerCase()}">${result["severity"]}</div>
+          <div class="col risk risk-${result["severity"].toLowerCase()}">${
+      result["severity"]
+    }</div>
           <div class="col actions">
-            <button class="btn" onclick="action('remove')">Remove</button>
-            <button class="btn" onclick="action('quarantine')">Quarantine</button>
-            <button class="btn" onclick="action('allow')">Allow</button>
+            <button class="btn" onclick="action('remove', '${id}')">Remove</button>
+            <button class="btn" onclick="action('quarantine', '${id}')">Quarantine</button>
+            <button class="btn" onclick="action('allow', '${id}')">Allow</button>
           </div>
         </div>`
-      // `<div class="row">
-      //     <div class="col title">${res["virus_name"]}</div>
-      //     <div class="col risk risk-${res["severity"].toLowerCase()}">${
-      //   res["severity"]
-      // }</div>
-      //     <div class="col actions">
-      //         <button class="btn" onclick="action('remove')">Remove</button>
-      //         <button class="btn" onclick="action('Quarantine')">Quarantine</button>
-      //         <button class="btn" onclick="action('allow')">Allow</button>
-      //     </div>
-      //   </div>
-      // `
-    );
+  );
+}
+
+
+function action(type, id){
+  if (type == "remove"){
+    console.log({type, id})
+    const el = document.getElementById(id)
+    el.parentElement.removeChild(el)
   }
+  if (type == "quarantine"){
+    console.log("quarantine")
+  }
+  if (type == "allow"){
+    console.log("Allow")  
+  }
+}

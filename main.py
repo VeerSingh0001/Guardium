@@ -41,8 +41,8 @@ def cancel_scan():
 @eel.expose
 def show_result():
     global anti
-    eel.showResult(anti.virus_results)
-    # print(anti.virus_results[0])
+    eel.showResult(anti.total_viruses)
+    
 
 
 eel.init("web")  # initialize eel
