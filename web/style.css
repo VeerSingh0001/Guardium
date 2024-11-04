@@ -126,6 +126,7 @@ header {
   font-size: 0.8rem;
   font-weight: 300;
   color: whitesmoke;
+  padding: 0 1rem;
 }
 
 .hide {
@@ -144,6 +145,7 @@ header {
 .threats .row.title {
   font-weight: 600;
   background: #1f1f1f;
+  
 }
 
 .threats .row .col {
@@ -152,7 +154,7 @@ header {
 }
 
 .threats .row .col.title {
-  flex: 0.2;
+  flex: 0.5;
 }
 
 .threats .row .col.risk {
@@ -160,7 +162,7 @@ header {
 }
 
 .threats .row .col.actions {
-  flex: 0.6;
+  flex: 0.3;
   display: flex;
   gap: 0.5rem;
 }

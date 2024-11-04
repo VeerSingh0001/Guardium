@@ -35,17 +35,23 @@
           <!-- Slides -->
           <div class="swiper-slide">
             <div class="spinner">
-              <button onclick="startScan('quick')">Quick Scan</button>
+              <button onclick="startScan('quick')">Quick Scan
+                <p class="current-file hide" id="progress-quick">100%</p>
+              </button>
             </div>
           </div>
           <div class="swiper-slide">
             <div class="spinner full">
-              <button onclick="startScan('full')">Full Scan</button>
+              <button onclick="startScan('full')">Full Scan
+                <p class="current-file hide" id="progress-full">100%</p>
+              </button>
             </div>
           </div>
           <div class="swiper-slide">
             <div class="spinner custom">
-              <button onclick="startScan('custom')">Custom Scan</button>
+              <button onclick="startScan('custom')">Custom Scan
+                <p class="current-file hide" id="progress-custom">100%</p>
+              </button>
             </div>
           </div>
           ...
@@ -66,7 +72,7 @@
       <div class="current-file-container hide">
         <span>Scanning: </span>
         <!-- max length 40 then ... -->
-        <span class="current-file">Start Scan</span>
+        <span class="current-file" id="file-name">Start Scan</span>
         <div class="center">
           <button class="btn ">
             Cancel</button>
@@ -84,13 +90,14 @@
           <div class="col actions">Action</div>
         </div>
        <div class="scrolls">
+        <!-- <div class="result hide" >No virus founded</div> -->
         <!-- <div class="row">
           <div class="col title">hack.exe</div>
           <div class="col risk risk-high">High</div>
           <div class="col actions">
-            <button class="btn" onclick="action('remove')>Remove</button>
-            <button class="btn" onclick="action('quarantine')>Quarantine</button>
-            <button class="btn" onclick="action('allow')>Allow</button>
+            <button class="btn" onclick="action('remove')">Remove</button>
+            <button class="btn" onclick="action('quarantine')">Quarantine</button>
+            <button class="btn" onclick="action('allow')">Allow</button>
           </div>
         </div>
         <div class="row">
