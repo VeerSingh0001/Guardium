@@ -15,6 +15,13 @@ class Anti:
         self.partitions = []
         self.stop_scan = False
         self.total_viruses = 0  # List to store virus scan results
+        self.executor = None
+
+    @eel.expose
+    def stop_scan(self):
+        self.stop_scan = True
+        if self.executor:
+            self.executor.shutdown(wait=False)
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
@@ -50,7 +57,9 @@ class Anti:
 
     async def count_files_in_directory_async(self, directory):
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, self.count_files_in_directory, directory)
+        return await loop.run_in_executor(
+            None, self.count_files_in_directory, directory
+        )
 
     # Count the total files number in the directory
     @staticmethod
@@ -65,17 +74,20 @@ class Anti:
 
     # Scan directory for viruses
     def scan_directory(self, cd, directory_path):
-        with ThreadPoolExecutor(
-                max_workers=os.cpu_count() * 10
-        ) as executor:
-            for root, _, files in os.walk(directory_path):
+        self.executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 4)
+        for root, _, files in os.walk(directory_path):
+            if self.stop_scan:  # Exit if scanning was canceled
+                print("Exiting scan_directory early due to cancel request.")
+                break
+                # return
+            for file in files:
                 if self.stop_scan:  # Exit if scanning was canceled
-                    return
-                for file in files:
-                    if self.stop_scan:  # Exit if scanning was canceled
-                        return
-                    file_path = os.path.join(root, file)
-                    executor.submit(self.scan_a_file, cd, file_path)
+                    print("Exiting scan_directory early due to cancel request.")
+                    break
+                    # return
+                file_path = os.path.join(root, file)
+                self.executor.submit(self.scan_a_file, cd, file_path)
+        self.executor.shutdown(wait=True)
 
     # Scan a single file
     def scan_a_file(self, cd, file_path):
@@ -89,16 +101,14 @@ class Anti:
                     return
 
                 result = cd.scan_file(rf"{file_path}")
-                if result is None:
-                    pass
-                else:
+                if result and isinstance(result, dict) and file_path in result and result[file_path][0] == 'FOUND':
                     self.total_viruses += 1
                     virus_name = os.path.basename(file_path)
                     severity = self.determine_severity(result, file_path)
                     virus_dict = {
-                        'virus_name': virus_name,
-                        'virus_path': file_path,
-                        'severity': severity,
+                        "virus_name": virus_name,
+                        "virus_path": file_path,
+                        "severity": severity,
                     }
                     eel.showResult(virus_dict)
         except Exception as e:
@@ -127,9 +137,12 @@ class Anti:
     # Determine the severity based on virus name
     @staticmethod
     def determine_severity(result, path):
-        if any (keyword in (str(result[path][1]).lower()) for keyword in ['trojan', 'worm', 'malware']):
-            return 'High'
-        elif 'adware' in str(result[path][1]).lower():
-            return 'Medium'
+        if any(
+            keyword in (str(result[path][1]).lower())
+            for keyword in ["trojan", "worm", "malware"]
+        ):
+            return "High"
+        elif "adware" in str(result[path][1]).lower():
+            return "Medium"
         else:
-            return 'Low'
+            return "Low"
