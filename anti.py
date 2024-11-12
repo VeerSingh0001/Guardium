@@ -8,6 +8,9 @@ import eel
 import psutil
 from win32security import GetFileSecurity, OWNER_SECURITY_INFORMATION, LookupAccountSid
 
+from database import Data
+
+data = Data()
 
 class Anti:
     def __init__(self):
@@ -17,11 +20,11 @@ class Anti:
         self.total_viruses = 0  # List to store virus scan results
         self.executor = None
 
-    @eel.expose
-    def stop_scan(self):
-        self.stop_scan = True
-        if self.executor:
-            self.executor.shutdown(wait=False)
+    # @eel.expose
+    # def stop_scan(self):
+    #     self.stop_scan = True
+    #     if self.executor:
+    #         self.executor.shutdown(wait=False)
 
     #  Count the total number of files to be scanned
     async def count_files(self, typ):
@@ -102,6 +105,10 @@ class Anti:
 
                 result = cd.scan_file(rf"{file_path}")
                 if result and isinstance(result, dict) and file_path in result and result[file_path][0] == 'FOUND':
+                    file_exists = data.check_path_exists(file_path)
+                    if file_exists:
+                        print("File exists")
+                        return
                     self.total_viruses += 1
                     virus_name = os.path.basename(file_path)
                     severity = self.determine_severity(result, file_path)

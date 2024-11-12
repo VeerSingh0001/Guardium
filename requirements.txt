@@ -3,3 +3,5 @@ psutil~=6.1.0
 PyAutoGUI~=0.9.54
 pyClamd~=0.4.0
 pywin32~=308
+future~=1.0.0
+SQLAlchemy~=2.0.36

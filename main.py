@@ -1,4 +1,5 @@
 import asyncio
+import os
 import platform
 import sys
 import threading
@@ -8,8 +9,10 @@ import pyautogui
 
 from anti import Anti
 from connect import Connect
+from database import Data
 
 anti = Anti()
+data = Data()
 scan_thread = None
 
 
@@ -33,7 +36,7 @@ def start_scan(typ):
         for par in anti.partitions:
             if anti.stop_scan:
                 print("Scan canceled mid-process.")
-                break  # Exit if scan is canceled
+                break  # Exit if scan canceled
 
             anti.scan_directory(guardium_instance, par)
     print("Scan finished or canceled.")
@@ -49,14 +52,40 @@ def cancel_scan():
     if anti.executor:
         anti.executor.shutdown(wait=False)
     print("Scan thread has been stopped.")
-    
-    
 
 
 @eel.expose
-def show_result():
-    global anti
-    eel.showResult(anti.total_viruses)
+def actions(typ, vid, name, file_path, severity):
+    # global data
+    # file_path.replace("\\", "\\")
+    print(file_path)
+    if typ == "remove":
+        os.remove(file_path)
+    elif typ == "allow":
+        data.add_allowed(vid, name, file_path, severity)
+    else:
+        data.add_quarantine(vid, name, file_path, severity)
+
+
+@eel.expose
+def show_allowed():
+    # Fetch and display all records in the `allowed` table
+    allowed_viruses = data.get_all_allowed()
+    for virus in allowed_viruses:
+        print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+
+
+@eel.expose
+def show_quarantined():
+    quarantined_viruses = data.get_all_quarantined()
+    for virus in quarantined_viruses:
+        print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+
+
+# @eel.expose
+# def show_result():
+#     global anti
+#     eel.showResult(anti.total_viruses)
 
 
 eel.init("web")  # initialize eel
@@ -71,7 +100,7 @@ try:
         size=(screen_reso.width, screen_reso.height),
     )
 except EnvironmentError:
-    # If Chrome isn't found, fallback to Microsoft Edge on Win10 or greater
+    # If Chrome not found, fallback to Microsoft Edge on Win10 or greater
     if sys.platform in ["win32", "win64"] and int(platform.release()) >= 10:
         eel.start(
             "index.html",

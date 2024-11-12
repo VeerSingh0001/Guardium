@@ -89,18 +89,19 @@ function cancelScan() {
   progressId.textContent = "Cancelling";
   eel.cancel_scan(); // Call the Python cancel_scan method
   clearInterval(intervalId);
-  isScanning = false;
-  total = 0;
-  degreePerFile = 0;
-  progress = 0;
-  currentFileNumber = 0;
-  percentage = 0;
+
   intervalId = 0;
 }
 cancel.addEventListener("click", cancelScan);
 
 eel.expose(update_interface);
 function update_interface() {
+  isScanning = false;
+  total = 0;
+  degreePerFile = 0;
+  progress = 0;
+  currentFileNumber = 0;
+  percentage = 0;
   spinner[0].style.background = `conic-gradient(var(--blue) ${0}deg, var(--black) ${0}deg)`;
   spinner[1].style.background = `conic-gradient(var(--red) ${0}deg, var(--black) ${0}deg)`;
   spinner[2].style.background = `conic-gradient(var(--purple) ${0}deg, var(--black) ${0}deg)`;
@@ -142,8 +143,9 @@ function limitString(str, noOfChars) {
 // Show detected viruses
 eel.expose(showResult);
 function showResult(result) {
-  if (intervalId == 0) return
-  
+  if (intervalId == 0) return;
+  console.log(result);
+
   const res = document.getElementsByClassName("result")[0];
   res.classList.add("hide");
   const scrolls = document.getElementsByClassName("scrolls")[0];
@@ -151,30 +153,39 @@ function showResult(result) {
   const id = `${Math.round(Math.random() * 1_000_000)}${Date.now()}`;
   scrolls.insertAdjacentHTML(
     "beforeend",
-    `<div class="row" id="${id}">
+    `<div class="row ${result["virus_path"]} " id="${id}">
           <div class="col title">${result["virus_name"]}</div>
           <div class="col risk risk-${result["severity"].toLowerCase()}">${
       result["severity"]
     }</div>
           <div class="col actions">
-            <button class="btn" onclick="action('remove', '${id}')">Remove</button>
-            <button class="btn" onclick="action('quarantine', '${id}')">Quarantine</button>
-            <button class="btn" onclick="action('allow', '${id}')">Allow</button>
+            <button class="btn" onclick="action('remove', '${id}', '${
+      result["virus_name"]
+    }' , '${result["severity"]}')">Remove</button>
+            <button class="btn" onclick="action('quarantine', '${id}', '${
+      result["virus_name"]
+    }' , '${result["severity"]}')">Quarantine</button>
+            <button class="btn" onclick="action('allow', '${id}', '${
+      result["virus_name"]
+    }' , '${result["severity"]}')">Allow</button>
           </div>
         </div>`
   );
 }
 
-function action(type, id) {
-  if (type == "remove") {
-    console.log({ type, id });
-    const el = document.getElementById(id);
-    el.parentElement.removeChild(el);
-  }
-  if (type == "quarantine") {
-    console.log("quarantine");
-  }
-  if (type == "allow") {
-    console.log("Allow");
-  }
+function action(type, id, vname, vseverity) {
+  const el = document.getElementById(id);
+  let path = el.classList[1];
+  console.log(path);
+  eel.actions(type, id, vname, path, vseverity);
+
+  // eel.actions(type, path);
+  el.parentElement.removeChild(el);
+  // if (type == "quarantine") {
+  //   eel.actions(type, id, vname, path, vseverity);
+  //   console.log("quarantine");
+  // }
+  // if (type == "allow") {
+  //   console.log("Allow");
+  // }
 }
