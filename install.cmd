@@ -1,5 +1,5 @@
-copy Guardium "C:\Program Files\Guardium"
-cd "C:\Program Files\Guardium"
+copy Guardium "C:\Guardium"
+cd "C:\Guardium"
 freshclam
 clamd --install-service
 net start clamd
