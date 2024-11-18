@@ -4,6 +4,7 @@ const spinner = document.querySelectorAll(".spinner");
 const cancel = document.querySelector(".center button");
 const swiperButtons = document.querySelectorAll(".swiper-btn");
 const currentProgress = document.getElementById("progress");
+const scrolls = document.getElementsByClassName("scrolls")[0];
 let progressId = "";
 
 let total = 0;
@@ -43,7 +44,7 @@ function startScan(type) {
   scanType = type;
   if (isScanning) return;
   setNav(type, true);
-
+  
   isScanning = true;
   progressId = document.getElementById(`progress-${type}`);
   progressId.classList.remove("hide");
@@ -143,14 +144,16 @@ function limitString(str, noOfChars) {
 // Show detected viruses
 eel.expose(showResult);
 function showResult(result) {
-  if (intervalId == 0) return;
-  console.log(result);
+  present = document.getElementsByClassName(result["virus_path"])[0];
+  if (intervalId == 0 || present) return;
+
 
   const res = document.getElementsByClassName("result")[0];
   res.classList.add("hide");
-  const scrolls = document.getElementsByClassName("scrolls")[0];
-
+  
+  
   const id = `${Math.round(Math.random() * 1_000_000)}${Date.now()}`;
+  
   scrolls.insertAdjacentHTML(
     "beforeend",
     `<div class="row ${result["virus_path"]} " id="${id}">

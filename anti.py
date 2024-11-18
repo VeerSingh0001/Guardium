@@ -1,5 +1,6 @@
 import asyncio
 import os
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
 from tkinter import Tk, filedialog
@@ -12,6 +13,7 @@ from database import Data
 
 data = Data()
 
+
 class Anti:
     def __init__(self):
         self.lock = Lock()
@@ -19,6 +21,9 @@ class Anti:
         self.stop_scan = False
         self.total_viruses = 0  # List to store virus scan results
         self.executor = None
+        self.quarantine_dir = r"C:\Guardium\Quarantine"
+        if not os.path.exists(self.quarantine_dir):
+            os.makedirs(self.quarantine_dir, exist_ok=True)
 
     # @eel.expose
     # def stop_scan(self):
@@ -145,8 +150,8 @@ class Anti:
     @staticmethod
     def determine_severity(result, path):
         if any(
-            keyword in (str(result[path][1]).lower())
-            for keyword in ["trojan", "worm", "malware"]
+                keyword in (str(result[path][1]).lower())
+                for keyword in ["trojan", "worm", "malware"]
         ):
             return "High"
         elif "adware" in str(result[path][1]).lower():

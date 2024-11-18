@@ -21,7 +21,9 @@ class Quarantine(Base):
     sr_no = Column(Integer, primary_key=True)
     id = Column(String)
     name = Column(String)
+    quarantined_name = Column(String, unique=True)
     path = Column(String, unique=True)
+    quarantined_path = Column(String, unique=True)
     severity = Column(String)
 
 
@@ -45,11 +47,13 @@ class Data:
         self.session.add(new_virus)
         self.session.commit()
 
-    def add_quarantine(self,vid, vname, vpath, vseverity):
+    def add_quarantine(self,vid, vname, vqname, vpath, vqpath, vseverity):
         new_virus = Quarantine(
             id=vid,
             name=vname,
+            quarantined_name = vqname,
             path=vpath,
+            quarantined_path = vqpath,
             severity=vseverity
         )
         self.session.add(new_virus)
