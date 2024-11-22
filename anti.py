@@ -1,6 +1,5 @@
 import asyncio
 import os
-import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
 from tkinter import Tk, filedialog
@@ -19,19 +18,13 @@ class Anti:
         self.lock = Lock()
         self.partitions = []
         self.stop_scan = False
-        self.total_viruses = 0  # List to store virus scan results
-        self.executor = None
+        self.total_viruses = 0
+        self.executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 8)
         self.quarantine_dir = r"C:\Guardium\Quarantine"
         if not os.path.exists(self.quarantine_dir):
             os.makedirs(self.quarantine_dir, exist_ok=True)
 
-    # @eel.expose
-    # def stop_scan(self):
-    #     self.stop_scan = True
-    #     if self.executor:
-    #         self.executor.shutdown(wait=False)
-
-    #  Count the total number of files to be scanned
+    # Count the total number of files
     async def count_files(self, typ):
         self.partitions = []
         if typ == "quick":
@@ -44,18 +37,14 @@ class Anti:
             ]
         elif typ == "full":
             all_partitions = psutil.disk_partitions()
-            for part in all_partitions:
-                self.partitions.append(part.device)
+            self.partitions = [part.device for part in all_partitions]
         else:
             root = Tk()
             dirct = filedialog.askdirectory().replace("/", "\\")
             root.destroy()
             self.partitions.append(dirct)
 
-        tasks = [
-            self.count_files_in_directory_async(partition.replace("\\", "/"))
-            for partition in self.partitions
-        ]
+        tasks = [self.count_files_in_directory_async(part.replace("\\", "/")) for part in self.partitions]
         results = await asyncio.gather(*tasks)
 
         file_count = sum(results)
@@ -65,11 +54,8 @@ class Anti:
 
     async def count_files_in_directory_async(self, directory):
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self.count_files_in_directory, directory
-        )
+        return await loop.run_in_executor(None, self.count_files_in_directory, directory)
 
-    # Count the total files number in the directory
     @staticmethod
     def count_files_in_directory(directory):
         file_count = 0
@@ -80,27 +66,26 @@ class Anti:
             print(f"Error counting files in {directory}: {e}")
         return file_count
 
-    # Scan directory for viruses
-    def scan_directory(self, cd, directory_path):
-        self.executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 4)
+    # Scan a directory
+    async def scan_directory(self, cd, directory_path):
+        loop = asyncio.get_event_loop()
+        tasks = []
         for root, _, files in os.walk(directory_path):
-            if self.stop_scan:  # Exit if scanning was canceled
+            if self.stop_scan:
                 print("Exiting scan_directory early due to cancel request.")
                 break
-                # return
             for file in files:
-                if self.stop_scan:  # Exit if scanning was canceled
+                if self.stop_scan:
                     print("Exiting scan_directory early due to cancel request.")
                     break
-                    # return
                 file_path = os.path.join(root, file)
-                self.executor.submit(self.scan_a_file, cd, file_path)
-        self.executor.shutdown(wait=True)
+                tasks.append(loop.run_in_executor(None, self.scan_a_file, cd, file_path))
+        await asyncio.gather(*tasks)
 
-    # Scan a single file
+    # Scan a file
     def scan_a_file(self, cd, file_path):
         if self.stop_scan:
-            return  # Exit if scanning was canceled
+            return
         try:
             with self.lock:
                 eel.current_file(file_path)
@@ -110,8 +95,7 @@ class Anti:
 
                 result = cd.scan_file(rf"{file_path}")
                 if result and isinstance(result, dict) and file_path in result and result[file_path][0] == 'FOUND':
-                    file_exists = data.check_path_exists(file_path)
-                    if file_exists:
+                    if data.check_path_exists(file_path):
                         print("File exists")
                         return
                     self.total_viruses += 1
@@ -132,27 +116,21 @@ class Anti:
         try:
             sd = GetFileSecurity(file_path, OWNER_SECURITY_INFORMATION)
             owner_sid = sd.GetSecurityDescriptorOwner()
-            name, domain, _ = LookupAccountSid(None, owner_sid)
+            name, _, _ = LookupAccountSid(None, owner_sid)
             return name
         except Exception as e:
             print(f"Error getting owner of {file_path}: {e}")
             return None
 
-    # Check if an owner is trusted or not
+    # Check owner is trusted or not
     @staticmethod
     def is_owner_trusted(owner):
-        if owner in ["SYSTEM", "TrustedInstaller"]:
-            return True
-        else:
-            return False
+        return owner in ["SYSTEM", "TrustedInstaller"]
 
-    # Determine the severity based on virus name
+    # Check the severity of the threat
     @staticmethod
     def determine_severity(result, path):
-        if any(
-                keyword in (str(result[path][1]).lower())
-                for keyword in ["trojan", "worm", "malware"]
-        ):
+        if any(keyword in (str(result[path][1]).lower()) for keyword in ["trojan", "worm", "malware"]):
             return "High"
         elif "adware" in str(result[path][1]).lower():
             return "Medium"

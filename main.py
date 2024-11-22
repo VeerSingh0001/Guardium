@@ -1,9 +1,9 @@
 import asyncio
+import ctypes
 import os
 import platform
 import sys
 import threading
-import ctypes
 
 import eel
 import pyautogui
@@ -17,7 +17,6 @@ anti = Anti()
 data = Data()
 scan_thread = None
 
-
 # Function to start the scanning functionalities.
 @eel.expose
 def run_scan(typ):
@@ -25,7 +24,6 @@ def run_scan(typ):
     anti.stop_scan = False
     scan_thread = threading.Thread(target=start_scan, args=(typ,))
     scan_thread.start()
-
 
 def start_scan(typ):
     anti.virus_results = []
@@ -35,31 +33,28 @@ def start_scan(typ):
     asyncio.run(anti.count_files(typ))
 
     if guardium_instance:
-        for par in anti.partitions:
-            if anti.stop_scan:
-                print("Scan canceled mid-process.")
-                break  # Exit if scan canceled
-
-            anti.scan_directory(guardium_instance, par)
+        asyncio.run(scan_all_directories(guardium_instance, anti.partitions))
     print("Scan finished or canceled.")
     eel.update_interface()
 
+async def scan_all_directories(cd, partitions):
+    tasks = [anti.scan_directory(cd, par) for par in partitions]
+    await asyncio.gather(*tasks)
 
+# To cancel a running scan
 @eel.expose
 def cancel_scan():
-    global anti, scan_thread
-    # if scan_thread and scan_thread.is_alive():
+    global anti
     anti.stop_scan = True  # Signal the thread to stop
-    #     scan_thread.join()  # Wait for the scan thread to exit
+
     if anti.executor:
         anti.executor.shutdown(wait=False)
     print("Scan thread has been stopped.")
 
-
+# To perform remove, quarantine or allow action on detected threats
 @eel.expose
 def actions(typ, vid, name, file_path, severity):
     global anti
-    # file_path.replace("\\", "\\")
     print(file_path)
     if typ == "remove":
         os.remove(file_path)
@@ -93,20 +88,7 @@ def actions(typ, vid, name, file_path, severity):
 
         data.add_quarantine(vid, name, quarantine_name, file_path, quarantine_path, severity)
 
-        # quarantine_path = os.path.join(anti.quarantine_dir, name)
-        # quarantine_name = name
-        # counter = 1
-        # while os.path.exists(quarantine_path):
-        #     quarantine_path = os.path.join(anti.quarantine_dir, f"{counter}_{name}")
-        #     quarantine_name = f"{counter}_{name}"
-        #     counter += 1
-        #
-        # data.add_quarantine(vid, name, quarantine_name, file_path, quarantine_path, severity)
-        #
-        # shutil.move(file_path, quarantine_path)
-        # print(f"File quarantined: {quarantine_path}")
-
-
+# To get all allowed threats
 @eel.expose
 def show_allowed():
     # Fetch and display all records in the `allowed` table
@@ -114,13 +96,14 @@ def show_allowed():
     for virus in allowed_viruses:
         print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
 
-
+# To get all quarantine threats
 @eel.expose
 def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
     for virus in quarantined_viruses:
         print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
 
+# Update antivirus signature database
 @eel.expose
 def update_db():
     """Run a .cmd file with Administrator privileges using PowerShell."""
@@ -129,13 +112,12 @@ def update_db():
             None,
             "runas",  # Request admin privileges
             "powershell.exe",  # PowerShell executable
-            f"-Command {os.path.abspath("update.cmd")}",  # Pass the .cmd file path
+            f"-Command {os.path.abspath('update.cmd')}",  # Pass the .cmd file path
             None,
             1,  # Show a new console window
         )
     except Exception as e:
         print(f"Error running .cmd file as Administrator: {e}")
-
 
 eel.init("web")  # initialize eel
 

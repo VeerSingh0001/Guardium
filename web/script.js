@@ -191,13 +191,6 @@ function action(type, id, vname, vseverity) {
   console.log(path);
   eel.actions(type, id, vname, path, vseverity);
 
-  // eel.actions(type, path);
   el.parentElement.removeChild(el);
-  // if (type == "quarantine") {
-  //   eel.actions(type, id, vname, path, vseverity);
-  //   console.log("quarantine");
-  // }
-  // if (type == "allow") {
-  //   console.log("Allow");
-  // }
+ 
 }
