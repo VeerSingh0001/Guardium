@@ -3,6 +3,7 @@ import os
 import platform
 import sys
 import threading
+import ctypes
 
 import eel
 import pyautogui
@@ -119,6 +120,21 @@ def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
     for virus in quarantined_viruses:
         print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+
+@eel.expose
+def update_db():
+    """Run a .cmd file with Administrator privileges using PowerShell."""
+    try:
+        ctypes.windll.shell32.ShellExecuteW(
+            None,
+            "runas",  # Request admin privileges
+            "powershell.exe",  # PowerShell executable
+            f"-Command {os.path.abspath("update.cmd")}",  # Pass the .cmd file path
+            None,
+            1,  # Show a new console window
+        )
+    except Exception as e:
+        print(f"Error running .cmd file as Administrator: {e}")
 
 
 eel.init("web")  # initialize eel

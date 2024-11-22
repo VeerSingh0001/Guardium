@@ -5,7 +5,9 @@ const cancel = document.querySelector(".center button");
 const swiperButtons = document.querySelectorAll(".swiper-btn");
 const currentProgress = document.getElementById("progress");
 const scrolls = document.getElementsByClassName("scrolls")[0];
+const updateBtn = document.getElementsByClassName("btn-update")[0]
 let progressId = "";
+
 
 let total = 0;
 let degreePerFile = 0;
@@ -94,6 +96,13 @@ function cancelScan() {
   intervalId = 0;
 }
 cancel.addEventListener("click", cancelScan);
+
+function updateDB(){
+  eel.update_db()
+  console.log("Updating...")
+}
+
+updateBtn.addEventListener("click", updateDB)
 
 eel.expose(update_interface);
 function update_interface() {

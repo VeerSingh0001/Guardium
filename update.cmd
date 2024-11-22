@@ -1,3 +1,3 @@
 cd "C:\Guardium"
-freshclam
+".\freshclam.exe"
 pause
