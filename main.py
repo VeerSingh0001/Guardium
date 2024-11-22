@@ -142,4 +142,5 @@ except EnvironmentError:
     else:
         raise EnvironmentError("Error: System is not Windows 10 or above")
 except (SystemExit, KeyboardInterrupt):
+    cancel_scan()
     sys.exit(0)
