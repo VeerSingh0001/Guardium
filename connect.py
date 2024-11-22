@@ -1,3 +1,4 @@
+import eel
 import pyclamd
 
 
@@ -14,7 +15,9 @@ class Connect:
                 return self.cd
             else:
                 print("Failed to connect to Guardium daemon")
+                eel.alertUser()
                 return None
         except pyclamd.ConnectionError:
             print("Could not connect to Guardium daemon.")
+            eel.alertUser()
             return None

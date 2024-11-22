@@ -18,6 +18,11 @@ let isScanning = false;
 let scanType = "quick";
 let percentage = 0;
 
+eel.expose(alertUser)
+function alertUser(){
+  alert("Please run 'service.cmd' file as an adminstartor first")
+}
+
 function setNav(type, hide) {
   if (hide) {
     //

@@ -1,97 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guardium</title>
+    <link rel="icon" href="./images/antivirus_logo.ico" type="image/x-icon" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guardium</title>
-  <link rel="stylesheet" href="./swiper-bundle.min.css">
+    <link rel="stylesheet" href="./swiper-bundle.min.css" />
 
-  <link rel="stylesheet" href="./style.css" />
-  <script type="text/javascript" src="/eel.js"></script>
-</head>
+    <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="/eel.js"></script>
+  </head>
 
-<body>
-  <!-- header component with guardium logo and title -->
-  <header>
-    <div class="branding">
-      <img src="./images/antivirus program logo.png" alt="guardium-logo" />
-      <h2>Guardium</h2>
-    </div>
-    <button class="btn btn-update">
-      <img src="./images/refresh-line.png" />
-      Update</button>
-  </header>
+  <body>
+    <!-- header component with guardium logo and title -->
+    <header>
+      <div class="branding">
+        <img src="./images/antivirus_logo.png" alt="guardium-logo" />
+        <h2>Guardium</h2>
+      </div>
+      <button class="btn btn-update">
+        <img src="./images/refresh-line.png" />
+        Update
+      </button>
+    </header>
 
-  <!-- Main App Content -->
-  <main id="main-content">
-    <!-- Scanning Spinner -->
+    <!-- Main App Content -->
+    <main id="main-content">
+      <!-- Scanning Spinner -->
 
-    <div class="scanContainer">
-
-      <div class="swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slides -->
-          <div class="swiper-slide">
-            <div class="spinner">
-              <button onclick="startScan('quick')">Quick Scan
-                <p class="current-file hide" id="progress-quick">Starting...</p>
-              </button>
+      <div class="scanContainer">
+        <div class="swiper">
+          <!-- Additional required wrapper -->
+          <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+              <div class="spinner">
+                <button onclick="startScan('quick')">
+                  Quick Scan
+                  <p class="current-file hide" id="progress-quick">
+                    Starting...
+                  </p>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="spinner full">
-              <button onclick="startScan('full')">Full Scan
-                <p class="current-file hide" id="progress-full">Starting...</p>
-              </button>
+            <div class="swiper-slide">
+              <div class="spinner full">
+                <button onclick="startScan('full')">
+                  Full Scan
+                  <p class="current-file hide" id="progress-full">
+                    Starting...
+                  </p>
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="spinner custom">
-              <button onclick="startScan('custom')">Custom Scan
-                <p class="current-file hide" id="progress-custom">Starting...</p>
-              </button>
+            <div class="swiper-slide">
+              <div class="spinner custom">
+                <button onclick="startScan('custom')">
+                  Custom Scan
+                  <p class="current-file hide" id="progress-custom">
+                    Starting...
+                  </p>
+                </button>
+              </div>
             </div>
+            ...
           </div>
-          ...
+
+          <!-- If we need navigation buttons -->
+          <div class="swiper-btn swiper-button-prev"></div>
+          <div class="swiper-btn swiper-button-next"></div>
+
+          <!-- If we need scrollbar -->
+          <div class="swiper-scrollbar"></div>
         </div>
 
-        <!-- If we need navigation buttons -->
-        <div class="swiper-btn swiper-button-prev"></div>
-        <div class="swiper-btn swiper-button-next"></div>
+        <!-- Current Scan files display -->
 
-        <!-- If we need scrollbar -->
-        <div class="swiper-scrollbar"></div>
-      </div>
-
-      <!-- Current Scan files display -->
-
-
-
-      <div class="current-file-container hide">
-        <span>Scanning: </span>
-        <!-- max length 40 then ... -->
-        <span class="current-file" id="file-name">Start Scan</span>
-        <div class="center">
-          <button class="btn ">
-            Cancel</button>
+        <div class="current-file-container hide">
+          <span>Scanning: </span>
+          <!-- max length 40 then ... -->
+          <span class="current-file" id="file-name">Start Scan</span>
+          <div class="center">
+            <button class="btn">Cancel</button>
+          </div>
         </div>
       </div>
+      <div class="virus-detect"></div>
 
-
-    </div>
-    <div class="virus-detect"></div>
-
-    <div class="threats">
+      <div class="threats">
         <div class="row title">
           <div class="col title">Threat</div>
           <div class="col risk">Risk</div>
           <div class="col actions">Action</div>
         </div>
-       <div class="scrolls">
-        <div class="result">No virus founded</div>
-        <!-- <div class="row">
+        <div class="scrolls">
+          <div class="result">No virus founded</div>
+          <!-- <div class="row">
           <div class="col title">hack.exe</div>
           <div class="col risk risk-high">High</div>
           <div class="col actions">
@@ -109,7 +114,7 @@
             <button class="btn">Allow</button>
           </div>
         </div> -->
-        <!-- <div class="row">
+          <!-- <div class="row">
           <div class="col title">all-dalveer-program.msi</div>
           <div class="col risk risk-low">Low</div>
           <div class="col actions">
@@ -118,29 +123,26 @@
             <button class="btn">Allow</button>
           </div> -->
         </div>
-
-
+      </div>
     </main>
 
     <script src="script.js"></script>
     <script src="./swiper-bundle.min.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', (event) => {
-        const swiper = new Swiper('.swiper', {
-          direction: 'horizontal',
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const swiper = new Swiper(".swiper", {
+          direction: "horizontal",
           loop: false,
           pagination: {
-            el: '.swiper-pagination',
+            el: ".swiper-pagination",
           },
           navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
           },
         });
       });
     </script>
-
-</body>
-
+  </body>
 </html>
