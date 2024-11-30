@@ -3,3 +3,14 @@ cd "C:\Program Files\ClamAV"
 freshclam
 clamd --install-service
 net start clamd
+
+
+
+
+cd "C:\Guardium"
+clamd --install-service
+sc config clamd start= auto
+sc start clamd
+net start clamd
+freshclam
+pause

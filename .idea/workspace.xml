@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="7f85f0d3-7a26-4b99-8018-3b902e60a326" name="Changes" comment="increased performance">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/update.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/update.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Guardium.tar.gz" beforeDir="false" afterPath="$PROJECT_DIR$/Guardium.tar.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clamAv installation.txt" beforeDir="false" afterPath="$PROJECT_DIR$/clamAv installation.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/install.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/install.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/install.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/install.py" beforeDir="false" afterPath="$PROJECT_DIR$/install.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

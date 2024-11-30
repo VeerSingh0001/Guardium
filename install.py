@@ -1,11 +1,15 @@
 import ctypes
 import os
+import shutil
 import tarfile
 
 # Path to your .tar.gz file
 file_path = "Guardium.tar.gz"
 # Destination directory to extract to
-extract_to = r"C:"
+extract_to = r"."
+
+source = rf"{os.getcwd()}\Guardium"
+destination = r"C:"
 
 try:
     # Open the .tar.gz file
@@ -13,10 +17,23 @@ try:
         print("Extracting files...")
         tar.extractall(path=extract_to, filter=None)  # Explicitly set filter to None
         print(f"Files extracted to: {extract_to}")
+
+
 except FileNotFoundError:
     print(f"The file {file_path} was not found.")
 except tarfile.TarError as e:
     print(f"Error processing the tar.gz file: {e}")
+
+try:
+    # Move the directory
+    shutil.move(source, destination)
+    print(f"Directory moved from {source} to {destination}")
+except FileNotFoundError:
+    print("The source directory does not exist.")
+except PermissionError:
+    print("Permission denied.")
+except Exception as e:
+    print(f"An error occurred: {e}")
 
 def run_cmd_as_admin(cmd_file_path):
     """Run a .cmd file with Administrator privileges using PowerShell."""
