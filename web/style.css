@@ -35,6 +35,10 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+main {
+  padding: 0 1rem;
+}
+
 button {
   font-family: "Poppins", sans-serif;
 }
@@ -46,19 +50,62 @@ header {
   padding: 1rem;
 }
 
-.branding {
+a {
+  text-decoration: none;
+}
+
+header .actions {
   display: flex;
   gap: 0.5rem;
 }
 
-.branding img {
-  width: 2rem;
+header .actions button {
+  width: 6rem;
   height: 2rem;
 }
 
-/* main {
-  height: calc(100vh - 10rem);
-} */
+
+
+.btn {
+  border: none;
+  background: #fff;
+  font-size: 0.7rem;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  width: 4rem;
+  height: 1.6rem;
+  cursor: pointer;
+  text-align: center;
+  transition: ease 100ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  /* width: 6rem;
+  height: 2rem; */
+}
+
+.btn img {
+  width: 1rem;
+}
+
+.btn:hover {
+  background: #ccc;
+}
+
+.branding {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.logo {
+ width: 1.8rem;
+}
+
+.logo img {
+  width: 100%;
+}
 
 .scanContainer {
   display: flex;
@@ -126,7 +173,7 @@ header {
   font-size: 0.8rem;
   font-weight: 300;
   color: whitesmoke;
-  padding: 0 1rem;
+  /* padding: 0 1rem; */
 }
 
 .hide {
@@ -171,33 +218,19 @@ header {
   gap: 0.5rem;
 }
 
+.threats .row .col.actions button {
+  width: 4.4rem;
+}
+
 .result{
   color: #20c56f;
   display: flex;
   justify-self: center;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 0.8rem;
+  padding: 1rem 0;
+  /* font-weight: bold; */
 }
 
-.btn {
-  border: none;
-  background: #fff;
-  font-size: 0.7rem;
-  padding: 0.2rem;
-  border-radius: 0.5rem;
-  width: 4rem;
-  height: 1.6rem;
-  cursor: pointer;
-  text-align: center;
-  transition: ease 100ms;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-}
-.btn:hover {
-  background: #ccc;
-}
 
 .risk-high {
   color: var(--red);
@@ -211,18 +244,55 @@ header {
   color: #20c56f;
 }
 
-.btn-update {
+
+/* .btn-update {
   width: 6rem;
   height: 2rem;
 }
 
-.btn-update img {
+.btn img {
   width: 1rem;
-}
+
+} */
 
 .center {
   margin-top: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.threat-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.threat-selector #threat-option {
+  background-color: transparent; /* Make the background transparent */
+  border: 1px solid #ccc; /* Add a border for visibility */
+  color: #ffffff; /* Text color */
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+  appearance: none; /* Remove default arrow styling */
+  -webkit-appearance: none; /* Remove default arrow styling for WebKit browsers */
+  -moz-appearance: none; /* Remove default arrow styling for Firefox */
+  outline: none; /* Remove focus outline */
+  border: none;
+  cursor: pointer;
+  background: #1f1f1f;
+  transition: ease 80ms;
+}
+
+.threat-selector #threat-option:hover {
+  background: #303030;
+  
+}
+
+/* Style the dropdown options */
+.threat-selector #threat-option option {
+  background-color: transparent; /* Make the options' background transparent */
+  color: #ffffff; /* Text color */
+  font-size: 16px;
 }

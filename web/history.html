@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guardium</title>
+    <link rel="icon" href="./images/antivirus_logo.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="./swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="./style.css" />
+    <script type="text/javascript" src="/eel.js"></script>
+</head>
+
+<body>
+    <!-- header component with guardium logo and title -->
+    <header>
+        <div class="branding">
+            <img src="./images/antivirus_logo.png" alt="guardium-logo" />
+            <h2>Guardium</h2>
+        </div>
+        <div class="actions">
+            <a href="/">
+                <button class="btn">
+                    <img src="./images/home-9-line.svg" />
+                    Home
+                </button>
+            </a>
+            <button class="btn btn-update">
+                <img src="./images/refresh-line.svg" />
+                Update
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="threat-selector">
+            <h3>Threats: </h3>
+            <select id="threat-option" name="threat-option" >
+                <option value="allowed" selected>Allowed</option>
+                <option value="quarantine">Quarantine</option>
+            </select>
+        </div>
+        <div class="threats">
+            <div class="row title">
+                <div class="col title">Threat</div>
+                <div class="col risk">Risk</div>
+                <div class="col actions">Action</div>
+            </div>
+            <div class="scrolls">
+                <!-- <div class="result">No virus founded</div> -->
+                <div class="row">
+                    <div class="col title">hack.exe</div>
+                    <div class="col risk risk-high">High</div>
+                    <div class="col actions">
+                        <button class="btn" onclick="action('remove')">Remove</button>
+                        <button class="btn" onclick="action('quarantine')">Quarantine</button>
+                        <button class="btn" onclick="action('allow')">Allow</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col title">Super.pyx</div>
+                    <div class="col risk risk-medium">Medium</div>
+                    <div class="col actions">
+                        <button class="btn">Remove</button>
+                        <button class="btn">Quarantile</button>
+                        <button class="btn">Allow</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col title">all-dalveer-program.msi</div>
+                    <div class="col risk risk-low">Low</div>
+                    <div class="col actions">
+                        <button class="btn">Remove</button>
+                        <button class="btn">Quarantile</button>
+                        <button class="btn">Allow</button>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="./swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            const swiper = new Swiper(".swiper", {
+                direction: "horizontal",
+                loop: false,
+                pagination: {
+                    el: ".swiper-pagination",
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        });
+    </script>
+</body>
+
+</html>
