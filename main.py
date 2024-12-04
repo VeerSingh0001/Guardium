@@ -144,3 +144,4 @@ except EnvironmentError:
 except (SystemExit, KeyboardInterrupt):
     cancel_scan()
     sys.exit(0)
+

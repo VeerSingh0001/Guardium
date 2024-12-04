@@ -55,7 +55,7 @@ function startScan(type) {
   isScanning = true;
   progressId = document.getElementById(`progress-${type}`);
   progressId.classList.remove("hide");
-  progressId.textContent = "Starting...";
+  progressId.textContent = "Counting Files...";
   currentFile.textContent = "Starting Scan...";
   const spinner = document.querySelector(
     `.spinner${type === "quick" ? "" : `.${type}`}`
