@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Guardium</title>
-    <link rel="icon" href="./images/antivirus_logo.ico" type="image/x-icon" />
+    <link rel="icon" href="./images/logo.png" type="image/x-icon" />
 
     <link rel="stylesheet" href="./swiper-bundle.min.css" />
 
@@ -16,13 +16,23 @@
     <!-- header component with guardium logo and title -->
     <header>
       <div class="branding">
-        <img src="./images/antivirus_logo.png" alt="guardium-logo" />
+        <div class="logo">
+          <img src="./images/logo.png" alt="guardium-logo" />
+        </div>
         <h2>Guardium</h2>
       </div>
-      <button class="btn btn-update">
-        <img src="./images/refresh-line.png" />
-        Update
-      </button>
+      <div class="actions">
+        <a href="/history.html">
+          <button class="btn">
+            <img src="./images/history-line.svg" />
+            History
+          </button>
+        </a>
+        <button class="btn btn-update">
+          <img src="./images/refresh-line.svg" />
+          Update
+        </button>
+      </div>
     </header>
 
     <!-- Main App Content -->
@@ -97,23 +107,25 @@
         <div class="scrolls">
           <div class="result">No virus founded</div>
           <!-- <div class="row">
-          <div class="col title">hack.exe</div>
-          <div class="col risk risk-high">High</div>
-          <div class="col actions">
-            <button class="btn" onclick="action('remove')">Remove</button>
-            <button class="btn" onclick="action('quarantine')">Quarantine</button>
-            <button class="btn" onclick="action('allow')">Allow</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col title">Super.pyx</div>
-          <div class="col risk risk-medium">Medium</div>
-          <div class="col actions">
-            <button class="btn">Remove</button>
-            <button class="btn">Quarantile</button>
-            <button class="btn">Allow</button>
-          </div>
-        </div> -->
+            <div class="col title">hack.exe</div>
+            <div class="col risk risk-high">High</div>
+            <div class="col actions">
+              <button class="btn" onclick="action('remove')">Remove</button>
+              <button class="btn" onclick="action('quarantine')">
+                Quarantine
+              </button>
+              <button class="btn" onclick="action('allow')">Allow</button>
+            </div>
+          </div> -->
+          <!-- <div class="row">
+            <div class="col title">Super.pyx</div>
+            <div class="col risk risk-medium">Medium</div>
+            <div class="col actions">
+              <button class="btn">Remove</button>
+              <button class="btn">Quarantile</button>
+              <button class="btn">Allow</button>
+            </div>
+          </div> -->
           <!-- <div class="row">
           <div class="col title">all-dalveer-program.msi</div>
           <div class="col risk risk-low">Low</div>
