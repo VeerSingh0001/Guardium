@@ -6,8 +6,8 @@ const swiperButtons = document.querySelectorAll(".swiper-btn");
 const currentProgress = document.getElementById("progress");
 const scrolls = document.getElementsByClassName("scrolls")[0];
 const updateBtn = document.getElementsByClassName("btn-update")[0]
+const historyPage = document.getElementById('history')
 let progressId = "";
-
 
 let total = 0;
 let degreePerFile = 0;
@@ -17,6 +17,15 @@ let intervalId = 0;
 let isScanning = false;
 let scanType = "quick";
 let percentage = 0;
+
+
+// history page initialization/start-up function
+function init() {
+  console.log('I am in history page')
+}
+
+// run once only if user is on history page
+if (historyPage) init()
 
 eel.expose(alertUser)
 function alertUser(){
