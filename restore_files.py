@@ -1,10 +1,7 @@
 from cryptography.fernet import Fernet
 
-
-def decrypt_file(encrypted_file_path, restore_path, key_file="key.key"):
-    # Load the encryption key
-    with open(key_file, "rb") as key_file:
-        key = key_file.read()
+key = "BY3VYM-i5pek9UGeijYGvNobJ_sr2yArso6bzwif66E="
+def decrypt_file(encrypted_file_path, restore_path, key_file=key):
     fernet = Fernet(key)
 
     # Read the encrypted file

@@ -56,14 +56,12 @@ def cancel_scan():
 def actions(typ, vid, name, file_path, severity):
     global anti
     print(file_path)
+    key = "BY3VYM-i5pek9UGeijYGvNobJ_sr2yArso6bzwif66E="
     if typ == "remove":
         os.remove(file_path)
     elif typ == "allow":
         data.add_allowed(vid, name, file_path, severity)
     else:
-        # Load the encryption key
-        with open("key.key", "rb") as key_file:
-            key = key_file.read()
         fernet = Fernet(key)
 
         # Read the file contents

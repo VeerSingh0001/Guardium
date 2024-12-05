@@ -34,14 +34,6 @@ class Connect:
     def run_cmd_as_admin(cmd_file_path):
         """Run a .cmd file with Administrator privileges using PowerShell."""
         try:
-            # ctypes.windll.shell32.ShellExecuteW(
-            #     None,
-            #     "runas",  # Request admin privileges
-            #     "powershell.exe",  # PowerShell executable
-            #     f"-Command {cmd_file_path}",  # Pass the .cmd file path
-            #     None,
-            #     1,  # Show a new console window
-            # )
             command = f'powershell -Command "Start-Process \\"cmd.exe\\" -ArgumentList \\"/c {cmd_file_path}\\" -Verb RunAs"'
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
             if result.returncode == 0:
