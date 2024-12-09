@@ -35,6 +35,7 @@ except PermissionError:
 except Exception as e:
     print(f"An error occurred: {e}")
 
+
 def run_cmd_as_admin(cmd_file_path):
     """Run a .cmd file with Administrator privileges using PowerShell."""
     try:
@@ -49,10 +50,7 @@ def run_cmd_as_admin(cmd_file_path):
     except Exception as e:
         print(f"Error running .cmd file as Administrator: {e}")
 
+
 # Example: Provide the full path to your .cmd file
 abs_path = os.path.abspath("install.cmd")
 run_cmd_as_admin(abs_path)
-
-
-
-

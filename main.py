@@ -2,7 +2,6 @@ import asyncio
 import ctypes
 import os
 import platform
-import shutil
 import sys
 import threading
 
@@ -18,6 +17,7 @@ anti = Anti()
 data = Data()
 scan_thread = None
 
+
 # Function to start the scanning functionalities.
 @eel.expose
 def run_scan(typ):
@@ -25,6 +25,7 @@ def run_scan(typ):
     anti.stop_scan = False
     scan_thread = threading.Thread(target=start_scan, args=(typ,))
     scan_thread.start()
+
 
 def start_scan(typ):
     anti.virus_results = []
@@ -38,9 +39,11 @@ def start_scan(typ):
     print("Scan finished or canceled.")
     eel.update_interface()
 
+
 async def scan_all_directories(cd, partitions):
     tasks = [anti.scan_directory(cd, par) for par in partitions]
     await asyncio.gather(*tasks)
+
 
 # To cancel a running scan
 @eel.expose
@@ -52,11 +55,11 @@ def cancel_scan():
         anti.executor.shutdown(wait=False)
     print("Scan thread has been stopped.")
 
+
 # To perform remove, quarantine or allow action on detected threats
 @eel.expose
-def actions(typ, vid, name, file_path, severity, history,catorgry):
+def actions(typ, vid, name, file_path, severity, history, catorgry):
     global anti
-    # print(file_path)
     key = "BY3VYM-i5pek9UGeijYGvNobJ_sr2yArso6bzwif66E="
 
     if typ == "remove":
@@ -77,12 +80,11 @@ def actions(typ, vid, name, file_path, severity, history,catorgry):
     elif typ == "allow":
         if history:
             q_path = data.get_quarantined_path(file_path)[0]
-            restore_file(q_path,file_path,key)
-            data.add_allowed(vid,name,file_path,severity)
+            restore_file(q_path, file_path, key)
+            data.add_allowed(vid, name, file_path, severity)
         else:
             data.add_allowed(vid, name, file_path, severity)
     elif typ == "restore":
-        # print(q_path)
         q_path = data.get_quarantined_path(file_path)[0]
         restore_file(q_path, file_path, key)
 
@@ -114,6 +116,7 @@ def actions(typ, vid, name, file_path, severity, history,catorgry):
         data.add_quarantine(vid, name, quarantine_name, file_path, quarantine_path, severity)
         os.remove(file_path)
 
+
 def restore_file(encrypted_file_path, restore_path, key):
     fernet = Fernet(key)
 
@@ -141,15 +144,13 @@ def show_allowed():
     allowed_viruses = data.get_all_allowed()
     eel.clearTable()
     for virus in allowed_viruses:
-        # print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
         virus_dict = {
             "virus_name": virus.name,
             "virus_path": virus.path,
             "severity": virus.severity,
         }
-        eel.showResult(virus_dict,True,"allowed")
-    # print(viruses_list)
-    # return  viruses_list
+        eel.showResult(virus_dict, True, "allowed")
+
 
 # To get all quarantine threats
 @eel.expose
@@ -157,7 +158,6 @@ def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
     eel.clearTable()
     for virus in quarantined_viruses:
-        # print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
         virus_dict = {
             "virus_name": virus.name,
             "virus_path": virus.path,
@@ -181,6 +181,7 @@ def update_db():
         )
     except Exception as e:
         print(f"Error running .cmd file as Administrator: {e}")
+
 
 eel.init("web")  # initialize eel
 
@@ -207,4 +208,3 @@ except EnvironmentError:
 except (SystemExit, KeyboardInterrupt):
     cancel_scan()
     sys.exit(0)
-

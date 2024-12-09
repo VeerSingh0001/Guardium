@@ -20,14 +20,13 @@ let isScanning = false;
 let scanType = "quick";
 let percentage = 0;
 
-// history page initialization/start-up function
-// eel.expose(showAllowd)
 
 eel.expose(clearTable);
 function clearTable() {
   if (scrolls) scrolls.innerHTML = "";
 }
 
+// history page initialization/start-up function
 function showAllowd(type = "allowed") {
   console.log("I am in history page");
   // scrolls.innerHTML = ""

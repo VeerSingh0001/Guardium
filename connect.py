@@ -20,14 +20,14 @@ class Connect:
                 cmd_file_path = os.path.abspath("service.cmd")
                 res = self.run_cmd_as_admin(cmd_file_path)
                 # eel.alertUser()
-                if res : return self.cd
+                if res: return self.cd
                 return None
         except pyclamd.ConnectionError:
             print("Could not connect to Guardium daemon.")
             cmd_file_path = os.path.abspath("service.cmd")
-            res  = self.run_cmd_as_admin(cmd_file_path)
+            res = self.run_cmd_as_admin(cmd_file_path)
             # eel.alertUser()
-            if res : return self.cd
+            if res: return self.cd
             return None
 
     @staticmethod
@@ -45,4 +45,3 @@ class Connect:
         except Exception as e:
             print(f"Error running .cmd file as Administrator: {e}")
             return None
-

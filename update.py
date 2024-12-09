@@ -16,6 +16,7 @@ def run_cmd_as_admin(cmd_file_path):
     except Exception as e:
         print(f"Error running .cmd file as Administrator: {e}")
 
+
 # Example: Provide the full path to your .cmd file
 abs_path = os.path.abspath("update.cmd")
 run_cmd_as_admin(abs_path)
