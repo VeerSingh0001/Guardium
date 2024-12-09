@@ -5,8 +5,9 @@ const cancel = document.querySelector(".center button");
 const swiperButtons = document.querySelectorAll(".swiper-btn");
 const currentProgress = document.getElementById("progress");
 const scrolls = document.getElementsByClassName("scrolls")[0];
-const updateBtn = document.getElementsByClassName("btn-update")[0]
-const historyPage = document.getElementById('history')
+const updateBtn = document.getElementsByClassName("btn-update")[0];
+const historyPage = document.getElementById("history");
+const threatSelector = document.getElementById("threat-option")
 let progressId = "";
 
 let total = 0;
@@ -18,18 +19,26 @@ let isScanning = false;
 let scanType = "quick";
 let percentage = 0;
 
-
 // history page initialization/start-up function
-function init() {
+// eel.expose(showAllowd)
+async function showAllowd(type = "allowed") {
   console.log('I am in history page')
+  // scrolls.innerHTML = ""
+  if (scrolls) scrolls.innerHTML = ""
+  if (type == "allowed") eel.show_allowed();
+  if (type == "quarantined") eel.show_quarantined();
 }
 
 // run once only if user is on history page
-if (historyPage) init()
+if (historyPage) showAllowd();
+if (threatSelector) threatSelector.addEventListener('change', (event) => {
+  showAllowd(event.target.value)
+})
 
-eel.expose(alertUser)
-function alertUser(){
-  alert("Please run 'service.cmd' file as an adminstartor first")
+
+eel.expose(alertUser);
+function alertUser() {
+  alert("Please run 'service.cmd' file as an adminstartor first");
 }
 
 function setNav(type, hide) {
@@ -60,7 +69,7 @@ function startScan(type) {
   scanType = type;
   if (isScanning) return;
   setNav(type, true);
-  
+
   isScanning = true;
   progressId = document.getElementById(`progress-${type}`);
   progressId.classList.remove("hide");
@@ -109,14 +118,14 @@ function cancelScan() {
 
   intervalId = 0;
 }
-cancel.addEventListener("click", cancelScan);
+if (cancel) cancel.addEventListener("click", cancelScan);
 
-function updateDB(){
-  eel.update_db()
-  console.log("Updating...")
+function updateDB() {
+  eel.update_db();
+  console.log("Updating...");
 }
 
-updateBtn.addEventListener("click", updateDB)
+if (updateBtn) updateBtn.addEventListener("click", updateDB);
 
 eel.expose(update_interface);
 function update_interface() {
@@ -166,28 +175,22 @@ function limitString(str, noOfChars) {
 
 // Show detected viruses
 eel.expose(showResult);
-function showResult(result) {
+function showResult(result, history, type = NaN) {
   present = document.getElementsByClassName(result["virus_path"])[0];
-  if (intervalId == 0 || present) return;
-
+  if ((intervalId == 0 || present) && !history) return;
 
   const res = document.getElementsByClassName("result")[0];
-  res.classList.add("hide");
-  
-  
+  if (res) res.classList.add("hide");
+
   const id = `${Math.round(Math.random() * 1_000_000)}${Date.now()}`;
-  
+
   scrolls.insertAdjacentHTML(
     "beforeend",
     `<div class="row ${result["virus_path"]} " id="${id}">
           <div class="col title">${result["virus_name"]}</div>
-          <div class="col risk risk-${result["severity"].toLowerCase()}">${
-      result["severity"]
-    }</div>
+            <div class="col risk risk-${result["severity"].toLowerCase()}">${result["severity"]}</div>
           <div class="col actions">
-            <button class="btn" onclick="action('remove', '${id}', '${
-      result["virus_name"]
-    }' , '${result["severity"]}')">Remove</button>
+            <button class="btn" onclick="action('remove', '${id}', '${result["virus_name"]}' , '${result["severity"]}')">Remove</button>
             <button class="btn" onclick="action('quarantine', '${id}', '${
       result["virus_name"]
     }' , '${result["severity"]}')">Quarantine</button>
@@ -206,5 +209,4 @@ function action(type, id, vname, vseverity) {
   eel.actions(type, id, vname, path, vseverity);
 
   el.parentElement.removeChild(el);
- 
 }

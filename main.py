@@ -92,14 +92,28 @@ def show_allowed():
     # Fetch and display all records in the `allowed` table
     allowed_viruses = data.get_all_allowed()
     for virus in allowed_viruses:
-        print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+        # print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+        virus_dict = {
+            "virus_name": virus.name,
+            "virus_path": virus.path,
+            "severity": virus.severity,
+        }
+        eel.showResult(virus_dict,True,"allowed")
+    # print(viruses_list)
+    # return  viruses_list
 
 # To get all quarantine threats
 @eel.expose
 def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
     for virus in quarantined_viruses:
-        print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+        # print(f"ID: {virus.id}, Name: {virus.name}, Path: {virus.path}, Severity: {virus.severity}")
+        virus_dict = {
+            "virus_name": virus.name,
+            "virus_path": virus.path,
+            "severity": virus.severity,
+        }
+        eel.showResult(virus_dict, True, "quarantined")
 
 # Update antivirus signature database
 @eel.expose
