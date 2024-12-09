@@ -6,8 +6,9 @@ const swiperButtons = document.querySelectorAll(".swiper-btn");
 const currentProgress = document.getElementById("progress");
 const scrolls = document.getElementsByClassName("scrolls")[0];
 const updateBtn = document.getElementsByClassName("btn-update")[0];
+const historyBtn = document.querySelector(".btn-history");
 const historyPage = document.getElementById("history");
-const threatSelector = document.getElementById("threat-option")
+const threatSelector = document.getElementById("threat-option");
 let progressId = "";
 
 let total = 0;
@@ -21,20 +22,32 @@ let percentage = 0;
 
 // history page initialization/start-up function
 // eel.expose(showAllowd)
-async function showAllowd(type = "allowed") {
-  console.log('I am in history page')
+
+eel.expose(clearTable);
+function clearTable() {
+  if (scrolls) scrolls.innerHTML = "";
+}
+
+function showAllowd(type = "allowed") {
+  console.log("I am in history page");
   // scrolls.innerHTML = ""
-  if (scrolls) scrolls.innerHTML = ""
+
   if (type == "allowed") eel.show_allowed();
   if (type == "quarantined") eel.show_quarantined();
 }
 
 // run once only if user is on history page
 if (historyPage) showAllowd();
-if (threatSelector) threatSelector.addEventListener('change', (event) => {
-  showAllowd(event.target.value)
-})
+if (threatSelector)
+  threatSelector.addEventListener("change", (event) => {
+    showAllowd(event.target.value);
+  });
 
+if (historyBtn)
+  historyBtn.addEventListener("click", (event) => {
+    if (isScanning) return;
+    window.location.href = "/history.html";
+  });
 
 eel.expose(alertUser);
 function alertUser() {
@@ -75,6 +88,7 @@ function startScan(type) {
   progressId.classList.remove("hide");
   progressId.textContent = "Counting Files...";
   currentFile.textContent = "Starting Scan...";
+
   const spinner = document.querySelector(
     `.spinner${type === "quick" ? "" : `.${type}`}`
   );
@@ -121,6 +135,7 @@ function cancelScan() {
 if (cancel) cancel.addEventListener("click", cancelScan);
 
 function updateDB() {
+  if (isScanning) return;
   eel.update_db();
   console.log("Updating...");
 }
@@ -178,6 +193,7 @@ eel.expose(showResult);
 function showResult(result, history, type = NaN) {
   present = document.getElementsByClassName(result["virus_path"])[0];
   if ((intervalId == 0 || present) && !history) return;
+  console.log(history)
 
   const res = document.getElementsByClassName("result")[0];
   if (res) res.classList.add("hide");
@@ -188,25 +204,43 @@ function showResult(result, history, type = NaN) {
     "beforeend",
     `<div class="row ${result["virus_path"]} " id="${id}">
           <div class="col title">${result["virus_name"]}</div>
-            <div class="col risk risk-${result["severity"].toLowerCase()}">${result["severity"]}</div>
+            <div class="col risk risk-${result["severity"].toLowerCase()}">${
+      result["severity"]
+    }</div>
           <div class="col actions">
-            <button class="btn" onclick="action('remove', '${id}', '${result["virus_name"]}' , '${result["severity"]}')">Remove</button>
-            <button class="btn" onclick="action('quarantine', '${id}', '${
+            <button class="btn" onclick="action('remove', '${id}', '${
       result["virus_name"]
-    }' , '${result["severity"]}')">Quarantine</button>
-            <button class="btn" onclick="action('allow', '${id}', '${
-      result["virus_name"]
-    }' , '${result["severity"]}')">Allow</button>
+    }' , '${result["severity"]}', '${history === "true" ? true : false}', '${type === "allowed" ? "allowed" : "quarantined"}')">Remove</button>
+            
+            
+            ${
+              type !== "quarantined"
+                ? `<button class="btn" onclick="action('quarantine', '${id}', '${result["virus_name"]}' , '${result["severity"]}', '${history === "true" ? true : false}', '${type === "allowed" ? "allowed" : "quarantined"}')">Quarantine</button>`
+                : ""
+            }
+            
+    
+        ${
+          historyPage && type === "quarantined"
+            ? `<button class="btn" onclick="action('restore', '${id}', '${result["virus_name"]}' , '${result["severity"]}', '${history === "true" ? true : false}')">Restore</button>`
+            : ""
+        }
+    
+    ${
+      type !== "allowed"
+        ? `<button class="btn" onclick="action('allow', '${id}', '${result["virus_name"]}' , '${result["severity"]}', '${history === "true" ? true : false}')">Allow</button>`
+        : ""
+    }
           </div>
         </div>`
   );
 }
 
-function action(type, id, vname, vseverity) {
+function action(type, id, vname, vseverity, history = false, catogry='') {
   const el = document.getElementById(id);
   let path = el.classList[1];
-  console.log(path);
-  eel.actions(type, id, vname, path, vseverity);
+  // console.log(path);
+  eel.actions(type, id, vname, path, vseverity,history,catogry);
 
   el.parentElement.removeChild(el);
 }

@@ -79,8 +79,20 @@ class Data:
         allowed_viruses = self.session.query(Allow).all()
         return allowed_viruses
 
+
     def get_all_quarantined(self):
         # Query all records from the `allowed` table
         allowed_viruses = self.session.query(Quarantine).all()
         return allowed_viruses
 
+    def get_quarantined_path(self, file_path):
+        virus_quarantined_path = self.session.query(Quarantine.quarantined_path).filter_by(path=file_path).first()
+        return  virus_quarantined_path
+
+    def remove_quarantined(self, q_file_path):
+        self.session.query(Quarantine).filter_by(quarantined_path=q_file_path).delete()
+        self.session.commit()
+
+    def remove_allowed(self,file_path):
+        self.session.query(Allow).filter_by(path=file_path).delete()
+        self.session.commit()
