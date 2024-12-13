@@ -10,8 +10,9 @@ const historyBtn = document.querySelector('.btn-history');
 const historyPage = document.getElementById('history');
 const threatSelector = document.getElementById('threat-option');
 const globalActionsContainer = document.querySelector('.global-actions');
-const quarantineAllBtn = document.getElementById("quarantine-all-btn")
-const restoreAllBtn = document.getElementById("restore-all-btn")
+const quarantineAllBtn = document.getElementById('quarantine-all-btn');
+const restoreAllBtn = document.getElementById('restore-all-btn');
+const removeAllBtn = document.getElementById('remove-all-btn');
 let progressId = '';
 
 let total = 0;
@@ -39,6 +40,43 @@ if (historyBtn)
 
 if (historyPage) showAllowd();
 
+function threatCollector(type) {
+  const rows = document.getElementsByClassName('row');
+  if (rows.length < 1) return;
+
+  const threats = Array.from(rows).map((row) => {
+    return {
+      id: row.id,
+      path: row.getAttribute('path'),
+      name: row.getAttribute('name'),
+      severity: row.getAttribute('severity'),
+      history: row.getAttribute('history'),
+      catogry: row.getAttribute('category'),
+      type,
+    };
+  });
+
+  return threats;
+}
+
+if (removeAllBtn)
+  removeAllBtn.addEventListener('click', function (event) {
+    const threats = threatCollector('remove');
+    console.log(threats);
+  });
+
+if (quarantineAllBtn)
+  quarantineAllBtn.addEventListener('click', function (event) {
+    const threats = threatCollector('quarantine');
+    console.log(threats);
+  });
+
+if (restoreAllBtn)
+  restoreAllBtn.addEventListener('click', function (event) {
+    const threats = threatCollector('restore');
+    console.log(threats);
+  });
+
 // history page initialization/start-up function
 function showAllowd(type = 'allowed') {
   console.log('I am in history page');
@@ -53,10 +91,9 @@ function showAllowd(type = 'allowed') {
 if (threatSelector)
   threatSelector.addEventListener('change', (event) => {
     showAllowd(event.target.value);
-  
-      quarantineAllBtn.classList.toggle("hide")
-      restoreAllBtn.classList.toggle("hide")
-  
+
+    quarantineAllBtn.classList.toggle('hide');
+    restoreAllBtn.classList.toggle('hide');
   });
 
 eel.expose(alertUser);
@@ -214,7 +251,14 @@ function showResult(result, history, type = NaN) {
 
   scrolls.insertAdjacentHTML(
     'beforeend',
-    `<div class="row ${result['virus_path']} " id="${id}">
+    `<div class="row ${result['virus_path']}" 
+      id="${id}" 
+      path="${result['virus_path']}"
+      name="${result['virus_name']}"
+      severity="${result['severity']}"
+      history="${history === 'true' ? true : false}"
+      category="${type === 'allowed' ? 'allowed' : 'quarantined'}"
+      >
           <div class="col title">${result['virus_name']}</div>
             <div class="col risk risk-${result['severity'].toLowerCase()}">${
       result['severity']
@@ -267,7 +311,7 @@ function showResult(result, history, type = NaN) {
 }
 
 function action(type, id, vname, vseverity, history = false, catogry = '') {
-   const el = document.getElementById(id);
+  const el = document.getElementById(id);
   let path = el.classList[1];
   // console.log(path);
   console.log(typeof history);
@@ -276,11 +320,10 @@ function action(type, id, vname, vseverity, history = false, catogry = '') {
   el.parentElement.removeChild(el);
 }
 
-
-eel.expose(showGlobalBtns)
-function showGlobalBtns(type="allowed"){
-  if (type == "quarantined"){
-    quarantineAllBtn.classList.add("hide")
-    restoreAllBtn.classList.remove("hide")
+eel.expose(showGlobalBtns);
+function showGlobalBtns(type = 'allowed') {
+  if (type == 'quarantined') {
+    quarantineAllBtn.classList.add('hide');
+    restoreAllBtn.classList.remove('hide');
   }
 }
