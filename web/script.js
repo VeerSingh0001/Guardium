@@ -9,6 +9,7 @@ const updateBtn = document.getElementsByClassName('btn-update')[0];
 const historyBtn = document.querySelector('.btn-history');
 const historyPage = document.getElementById('history');
 const threatSelector = document.getElementById('threat-option');
+const globalActionsContainer = document.querySelector('.global-actions');
 let progressId = '';
 
 let total = 0;
@@ -255,6 +256,8 @@ function showResult(result, history, type = NaN) {
           </div>
         </div>`
   );
+
+  globalActionsContainer.classList.remove('hide');
 }
 
 function action(type, id, vname, vseverity, history = false, catogry = '') {
