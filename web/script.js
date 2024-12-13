@@ -10,6 +10,8 @@ const historyBtn = document.querySelector('.btn-history');
 const historyPage = document.getElementById('history');
 const threatSelector = document.getElementById('threat-option');
 const globalActionsContainer = document.querySelector('.global-actions');
+const quarantineAllBtn = document.getElementById("quarantine-all-btn")
+const restoreAllBtn = document.getElementById("restore-all-btn")
 let progressId = '';
 
 let total = 0;
@@ -51,6 +53,10 @@ function showAllowd(type = 'allowed') {
 if (threatSelector)
   threatSelector.addEventListener('change', (event) => {
     showAllowd(event.target.value);
+  
+      quarantineAllBtn.classList.toggle("hide")
+      restoreAllBtn.classList.toggle("hide")
+  
   });
 
 eel.expose(alertUser);
@@ -261,11 +267,20 @@ function showResult(result, history, type = NaN) {
 }
 
 function action(type, id, vname, vseverity, history = false, catogry = '') {
-  const el = document.getElementById(id);
+   const el = document.getElementById(id);
   let path = el.classList[1];
   // console.log(path);
   console.log(typeof history);
   eel.actions(type, id, vname, path, vseverity, history, catogry);
 
   el.parentElement.removeChild(el);
+}
+
+
+eel.expose(showGlobalBtns)
+function showGlobalBtns(type="allowed"){
+  if (type == "quarantined"){
+    quarantineAllBtn.classList.add("hide")
+    restoreAllBtn.classList.remove("hide")
+  }
 }

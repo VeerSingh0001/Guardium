@@ -154,6 +154,7 @@ def show_allowed():
             "severity": virus.severity,
         }
         eel.showResult(virus_dict, True, "allowed")
+        # eel.showGlobalBtns("allowed")
 
 
 # To get all quarantine threats
@@ -171,6 +172,7 @@ def show_quarantined():
             "severity": virus.severity,
         }
         eel.showResult(virus_dict, True, "quarantined")
+        # eel.showGlobalBtns("quarantined")
 
 
 # Update antivirus signature database
