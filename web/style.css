@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
   margin: 0;
@@ -32,7 +32,7 @@
 body {
   background: var(--black);
   color: #ffff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 main {
@@ -40,7 +40,7 @@ main {
 }
 
 button {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 header {
@@ -63,8 +63,6 @@ header .actions button {
   width: 6rem;
   height: 2rem;
 }
-
-
 
 .btn {
   border: none;
@@ -100,7 +98,7 @@ header .actions button {
 }
 
 .logo {
- width: 1.8rem;
+  width: 1.8rem;
 }
 
 .logo img {
@@ -196,7 +194,6 @@ header .actions button {
 .threats .row.title {
   font-weight: 600;
   background: #1f1f1f;
-  
 }
 
 .threats .row .col {
@@ -222,7 +219,7 @@ header .actions button {
   width: 4.4rem;
 }
 
-.result{
+.result {
   color: #20c56f;
   display: flex;
   justify-self: center;
@@ -230,7 +227,6 @@ header .actions button {
   padding: 1rem 0;
   /* font-weight: bold; */
 }
-
 
 .risk-high {
   color: var(--red);
@@ -243,7 +239,6 @@ header .actions button {
 .risk-low {
   color: #20c56f;
 }
-
 
 /* .btn-update {
   width: 6rem;
@@ -287,7 +282,6 @@ header .actions button {
 
 .threat-selector #threat-option:hover {
   background: #303030;
-  
 }
 
 /* Style the dropdown options */
@@ -295,4 +289,15 @@ header .actions button {
   background-color: transparent; /* Make the options' background transparent */
   color: #ffffff; /* Text color */
   font-size: 16px;
+}
+
+.global-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.global-actions .btn {
+  width: 6rem;
 }

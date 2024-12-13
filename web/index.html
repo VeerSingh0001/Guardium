@@ -22,12 +22,11 @@
         <h2>Guardium</h2>
       </div>
       <div class="actions">
-        
-          <button class="btn btn-history">
-            <img src="./images/history-line.svg" />
-            History
-          </button>
-      
+        <button class="btn btn-history">
+          <img src="./images/history-line.svg" />
+          History
+        </button>
+
         <button class="btn btn-update">
           <img src="./images/refresh-line.svg" />
           Update
@@ -116,8 +115,8 @@
               </button>
               <button class="btn" onclick="action('allow')">Allow</button>
             </div>
-          </div> -->
-          <!-- <div class="row">
+          </div>
+          <div class="row">
             <div class="col title">Super.pyx</div>
             <div class="col risk risk-medium">Medium</div>
             <div class="col actions">
@@ -125,15 +124,20 @@
               <button class="btn">Quarantile</button>
               <button class="btn">Allow</button>
             </div>
+          </div>
+          <div class="row">
+            <div class="col title">all-dalveer-program.msi</div>
+            <div class="col risk risk-low">Low</div>
+            <div class="col actions">
+              <button class="btn">Remove</button>
+              <button class="btn">Quarantile</button>
+              <button class="btn">Allow</button>
+            </div>
           </div> -->
-          <!-- <div class="row">
-          <div class="col title">all-dalveer-program.msi</div>
-          <div class="col risk risk-low">Low</div>
-          <div class="col actions">
-            <button class="btn">Remove</button>
-            <button class="btn">Quarantile</button>
-            <button class="btn">Allow</button>
-          </div> -->
+          <div class="global-actions hide">
+            <button class="btn" id="quarantine-all-btn">Quarantine All</button>
+            <button class="btn" id="remove-all-btn">Remove All</button>
+          </div>
         </div>
       </div>
     </main>
@@ -142,16 +146,16 @@
     <script src="./swiper-bundle.min.js"></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", (event) => {
-        const swiper = new Swiper(".swiper", {
-          direction: "horizontal",
+      document.addEventListener('DOMContentLoaded', (event) => {
+        const swiper = new Swiper('.swiper', {
+          direction: 'horizontal',
           loop: false,
           pagination: {
-            el: ".swiper-pagination",
+            el: '.swiper-pagination',
           },
           navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
           },
         });
       });
