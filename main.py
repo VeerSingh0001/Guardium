@@ -64,8 +64,8 @@ def actions(typ, vid, name, file_path, severity, history, catorgry):
 
     if typ == "remove":
         print(file_path)
-        print(history)
-        if history:
+        print(type(history))
+        if history == "true" :
             print(catorgry)
             if catorgry == "allowed":
                 data.remove_allowed(file_path)
@@ -78,7 +78,7 @@ def actions(typ, vid, name, file_path, severity, history, catorgry):
         else:
             os.remove(file_path)
     elif typ == "allow":
-        if history:
+        if history == "true":
             q_path = data.get_quarantined_path(file_path)[0]
             restore_file(q_path, file_path, key)
             data.add_allowed(vid, name, file_path, severity)
@@ -142,7 +142,11 @@ def restore_file(encrypted_file_path, restore_path, key):
 def show_allowed():
     # Fetch and display all records in the `allowed` table
     allowed_viruses = data.get_all_allowed()
-    eel.clearTable()
+    print(type(allowed_viruses))
+    if len(allowed_viruses) == 0:
+        print("inside if")
+        eel.noVirusFound()
+        return
     for virus in allowed_viruses:
         virus_dict = {
             "virus_name": virus.name,
@@ -156,7 +160,10 @@ def show_allowed():
 @eel.expose
 def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
-    eel.clearTable()
+    print(len(quarantined_viruses))
+    if len(quarantined_viruses) == 0:
+        eel.noVirusFound()
+        return
     for virus in quarantined_viruses:
         virus_dict = {
             "virus_name": virus.name,
