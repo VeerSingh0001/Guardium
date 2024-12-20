@@ -3,6 +3,8 @@ import os
 from cryptography.fernet import Fernet
 
 key = "BY3VYM-i5pek9UGeijYGvNobJ_sr2yArso6bzwif66E="
+
+
 def decrypt_file(encrypted_file_path, restore_path, key):
     fernet = Fernet(key)
 
@@ -19,5 +21,6 @@ def decrypt_file(encrypted_file_path, restore_path, key):
 
     print(f"File decrypted and restored to {restore_path}")
     os.remove(encrypted_file_path)
+
 
 decrypt_file(r"C:\Guardium\Quarantine\1ea3dc626b9ccee026502ac8e8a98643c65a055829e8d8b1750b2468254c0ab1.enc", r"D:\Viruses\1ea3dc626b9ccee026502ac8e8a98643c65a055829e8d8b1750b2468254c0ab1")

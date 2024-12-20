@@ -62,32 +62,62 @@ function threatCollector(type) {
 if (removeAllBtn)
   removeAllBtn.addEventListener('click', function (event) {
     const threats = threatCollector('remove');
-    console.log(threats);
+    for (threat of threats) {
+      if (threat.name == null) continue;
+      action(
+        threat.type,
+        threat.id,
+        threat.name,
+        threat.severity,
+        threat.history,
+        threat.catogry
+      );
+    }
+    globalActionsContainer.classList.add('hide');
   });
 
 if (quarantineAllBtn)
   quarantineAllBtn.addEventListener('click', function (event) {
     const threats = threatCollector('quarantine');
-    console.log(threats);
+    for (threat of threats) {
+      if (threat.name == null) continue;
+      action(
+        threat.type,
+        threat.id,
+        threat.name,
+        threat.severity,
+        threat.history,
+        threat.catogry
+      );
+    }
+    globalActionsContainer.classList.add('hide');
   });
 
 if (restoreAllBtn)
   restoreAllBtn.addEventListener('click', function (event) {
     const threats = threatCollector('restore');
-    console.log(threats);
+    for (threat of threats) {
+      if (threat.name == null) continue;
+      action(
+        threat.type,
+        threat.id,
+        threat.name,
+        threat.severity,
+        threat.history,
+        threat.catogry
+      );
+    }
+    globalActionsContainer.classList.add('hide');
   });
 
 // history page initialization/start-up function
 function showAllowd(type = 'allowed') {
-  console.log('I am in history page');
   if (scrolls) scrolls.innerHTML = '';
 
   if (type == 'allowed') eel.show_allowed();
   if (type == 'quarantined') eel.show_quarantined();
 }
 
-// run once only if user is on history page
-// if (historyPage) showAllowd();
 if (threatSelector)
   threatSelector.addEventListener('change', (event) => {
     showAllowd(event.target.value);
@@ -157,8 +187,6 @@ function startScan(type) {
     }
 
     if (progress > 360) {
-      console.log('Scan complete');
-      eel.show_result();
       clearInterval(intervalId);
       isScanning = false;
       setNav(type, false);
@@ -184,7 +212,6 @@ if (cancel) cancel.addEventListener('click', cancelScan);
 function updateDB() {
   if (isScanning) return;
   eel.update_db();
-  console.log('Updating...');
 }
 
 if (updateBtn) updateBtn.addEventListener('click', updateDB);
@@ -240,14 +267,11 @@ eel.expose(showResult);
 function showResult(result, history, type = NaN) {
   present = document.getElementsByClassName(result['virus_path'])[0];
   if ((intervalId == 0 || present) && !history) return;
-  console.log(history);
 
   const res = document.getElementsByClassName('result')[0];
   if (res) res.classList.add('hide');
 
   const id = `${Math.round(Math.random() * 1_000_000)}${Date.now()}`;
-
-  console.log(scrolls);
 
   scrolls.insertAdjacentHTML(
     'beforeend',
@@ -256,7 +280,7 @@ function showResult(result, history, type = NaN) {
       path="${result['virus_path']}"
       name="${result['virus_name']}"
       severity="${result['severity']}"
-      history="${history === 'true' ? true : false}"
+      history="${history === true ? true : false}"
       category="${type === 'allowed' ? 'allowed' : 'quarantined'}"
       >
           <div class="col title">${result['virus_name']}</div>
@@ -266,7 +290,7 @@ function showResult(result, history, type = NaN) {
           <div class="col actions">
             <button class="btn" onclick="action('remove', '${id}', '${
       result['virus_name']
-    }' , '${result['severity']}', '${history === 'true' ? true : false}', '${
+    }' , '${result['severity']}', '${history === true ? true : false}', '${
       type === 'allowed' ? 'allowed' : 'quarantined'
     }')">Remove</button>
             
@@ -276,7 +300,7 @@ function showResult(result, history, type = NaN) {
                 ? `<button class="btn" onclick="action('quarantine', '${id}', '${
                     result['virus_name']
                   }' , '${result['severity']}', '${
-                    history === 'true' ? true : false
+                    history === true ? true : false
                   }', '${
                     type === 'allowed' ? 'allowed' : 'quarantined'
                   }')">Quarantine</button>`
@@ -289,7 +313,7 @@ function showResult(result, history, type = NaN) {
             ? `<button class="btn" onclick="action('restore', '${id}', '${
                 result['virus_name']
               }' , '${result['severity']}', '${
-                history === 'true' ? true : false
+                history === true ? true : false
               }')">Restore</button>`
             : ''
         }
@@ -299,7 +323,7 @@ function showResult(result, history, type = NaN) {
         ? `<button class="btn" onclick="action('allow', '${id}', '${
             result['virus_name']
           }' , '${result['severity']}', '${
-            history === 'true' ? true : false
+            history === true ? true : false
           }')">Allow</button>`
         : ''
     }
@@ -313,8 +337,6 @@ function showResult(result, history, type = NaN) {
 function action(type, id, vname, vseverity, history = false, catogry = '') {
   const el = document.getElementById(id);
   let path = el.classList[1];
-  // console.log(path);
-  console.log(typeof history);
   eel.actions(type, id, vname, path, vseverity, history, catogry);
 
   el.parentElement.removeChild(el);

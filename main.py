@@ -58,21 +58,22 @@ def cancel_scan():
 
 # To perform remove, quarantine or allow action on detected threats
 @eel.expose
-def actions(typ, vid, name, file_path, severity, history, catorgry):
+def actions(typ, vid, name, file_path, severity, history, category):
     global anti
     key = "BY3VYM-i5pek9UGeijYGvNobJ_sr2yArso6bzwif66E="
-
+    # print(typ)
     if typ == "remove":
-        print(file_path)
-        print(type(history))
-        if history == "true" :
-            print(catorgry)
-            if catorgry == "allowed":
+        #         print(file_path)
+        #         print(history)
+        # print(typ(history))
+        if history == "true":
+            #             print(category)
+            if category == "allowed":
                 data.remove_allowed(file_path)
                 os.remove(file_path)
             else:
                 q_path = data.get_quarantined_path(file_path)[0]
-                print(f"Quarantined file path: {q_path}")
+                #                 print(f"Quarantined file path: {q_path}")
                 data.remove_quarantined(q_path)
                 os.remove(q_path)
         else:
@@ -89,7 +90,7 @@ def actions(typ, vid, name, file_path, severity, history, catorgry):
         restore_file(q_path, file_path, key)
 
     else:
-        if history and catorgry == "allowed":
+        if history and category == "allowed":
             data.remove_allowed(file_path)
         fernet = Fernet(key)
 
@@ -111,7 +112,7 @@ def actions(typ, vid, name, file_path, severity, history, catorgry):
         with open(quarantine_path, "wb") as encrypted_file:
             encrypted_file.write(encrypted_data)
 
-        print(f"File encrypted and stored at {quarantine_path}")
+        #         print(f"File encrypted and stored at {quarantine_path}")
 
         data.add_quarantine(vid, name, quarantine_name, file_path, quarantine_path, severity)
         os.remove(file_path)
@@ -131,8 +132,8 @@ def restore_file(encrypted_file_path, restore_path, key):
     with open(restore_path, "wb") as restored_file:
         restored_file.write(decrypted_data)
 
-    print(f"File decrypted and restored to {restore_path}")
-    print(f"Encrypted file path: {encrypted_file_path}")
+    #     print(f"File decrypted and restored to {restore_path}")
+    #     print(f"Encrypted file path: {encrypted_file_path}")
     data.remove_quarantined(encrypted_file_path)
     os.remove(encrypted_file_path)
 
@@ -142,9 +143,9 @@ def restore_file(encrypted_file_path, restore_path, key):
 def show_allowed():
     # Fetch and display all records in the `allowed` table
     allowed_viruses = data.get_all_allowed()
-    print(type(allowed_viruses))
+    #     print(type(allowed_viruses))
     if len(allowed_viruses) == 0:
-        print("inside if")
+        #         print("inside if")
         eel.noVirusFound()
         return
     for virus in allowed_viruses:
@@ -161,7 +162,7 @@ def show_allowed():
 @eel.expose
 def show_quarantined():
     quarantined_viruses = data.get_all_quarantined()
-    print(len(quarantined_viruses))
+    #     print(len(quarantined_viruses))
     if len(quarantined_viruses) == 0:
         eel.noVirusFound()
         return
