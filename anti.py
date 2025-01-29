@@ -12,7 +12,6 @@ from database import Data
 
 data = Data()
 
-
 class Anti:
     def __init__(self):
         self.lock = Lock()
@@ -21,14 +20,19 @@ class Anti:
         self.total_viruses = 0
         self.executor = ThreadPoolExecutor(max_workers=os.cpu_count() * 8)
         self.quarantine_dir = r"C:\Guardium\Quarantine"
-        if not os.path.exists(self.quarantine_dir):
-            os.makedirs(self.quarantine_dir, exist_ok=True)
+        os.makedirs(self.quarantine_dir, exist_ok=True)
 
-    # Count the total number of files
     async def count_files(self, typ):
-        self.partitions = []
+        self.partitions = self._get_partitions(typ)
+        tasks = [self.count_files_in_directory_async(part.replace("\\", "/")) for part in self.partitions]
+        file_count = sum(await asyncio.gather(*tasks))
+        print(f"Total number of files: {file_count}")
+        eel.total_files(file_count)
+        return file_count
+
+    def _get_partitions(self, typ):
         if typ == "quick":
-            self.partitions = [
+            return [
                 "C:\\Windows\\System32",
                 "C:\\Program Files",
                 "C:\\Program Files (x86)",
@@ -36,21 +40,12 @@ class Anti:
                 os.path.expandvars("%USERPROFILE%\\AppData\\Roaming"),
             ]
         elif typ == "full":
-            all_partitions = psutil.disk_partitions()
-            self.partitions = [part.device for part in all_partitions]
+            return [part.device for part in psutil.disk_partitions()]
         else:
             root = Tk()
             dirct = filedialog.askdirectory().replace("/", "\\")
             root.destroy()
-            self.partitions.append(dirct)
-
-        tasks = [self.count_files_in_directory_async(part.replace("\\", "/")) for part in self.partitions]
-        results = await asyncio.gather(*tasks)
-
-        file_count = sum(results)
-        print(f"Total number of files: {file_count}")
-        eel.total_files(file_count)
-        return file_count
+            return [dirct]
 
     async def count_files_in_directory_async(self, directory):
         loop = asyncio.get_event_loop()
@@ -66,7 +61,6 @@ class Anti:
             print(f"Error counting files in {directory}: {e}")
         return file_count
 
-    # Scan a directory
     async def scan_directory(self, cd, directory_path):
         loop = asyncio.get_event_loop()
         tasks = []
@@ -82,7 +76,6 @@ class Anti:
                 tasks.append(loop.run_in_executor(None, self.scan_a_file, cd, file_path))
         await asyncio.gather(*tasks)
 
-    # Scan a file
     def scan_a_file(self, cd, file_path):
         if self.stop_scan:
             return
@@ -110,7 +103,6 @@ class Anti:
         except Exception as e:
             print(f"Error scanning file {file_path}: {e}")
 
-    # Get a file owner
     @staticmethod
     def get_file_owner(file_path):
         try:
@@ -122,12 +114,10 @@ class Anti:
             print(f"Error getting owner of {file_path}: {e}")
             return None
 
-    # Check owner is trusted or not
     @staticmethod
     def is_owner_trusted(owner):
         return owner in ["SYSTEM", "TrustedInstaller"]
 
-    # Check the severity of the threat
     @staticmethod
     def determine_severity(result, path):
         if any(keyword in (str(result[path][1]).lower()) for keyword in ["trojan", "worm", "malware"]):

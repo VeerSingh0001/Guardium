@@ -1,38 +1,31 @@
 import os
 import subprocess
-
 import pyclamd
-
 
 class Connect:
     def __init__(self):
         self.cd = None
 
-    # Connect to the ClamAV daemon
     def connect_to_guardium(self):
         try:
-            self.cd = pyclamd.ClamdNetworkSocket()  # Use network socket connection
+            self.cd = pyclamd.ClamdNetworkSocket()
             if self.cd.ping():
                 print("Connected to Guardium daemon")
                 return self.cd
             else:
-                print("Failed to connect to Guardium daemon")
-                cmd_file_path = os.path.abspath("service.cmd")
-                res = self.run_cmd_as_admin(cmd_file_path)
-                # eel.alertUser()
-                if res: return self.cd
-                return None
+                return self._attempt_reconnect()
         except pyclamd.ConnectionError:
-            print("Could not connect to Guardium daemon.")
-            cmd_file_path = os.path.abspath("service.cmd")
-            res = self.run_cmd_as_admin(cmd_file_path)
-            # eel.alertUser()
-            if res: return self.cd
-            return None
+            return self._attempt_reconnect()
+
+    def _attempt_reconnect(self):
+        print("Could not connect to Guardium daemon.")
+        cmd_file_path = os.path.abspath("service.cmd")
+        if self.run_cmd_as_admin(cmd_file_path):
+            return self.cd
+        return None
 
     @staticmethod
     def run_cmd_as_admin(cmd_file_path):
-        """Run a .cmd file with Administrator privileges using PowerShell."""
         try:
             command = f'powershell -Command "Start-Process \\"cmd.exe\\" -ArgumentList \\"/c {cmd_file_path}\\" -Verb RunAs"'
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
